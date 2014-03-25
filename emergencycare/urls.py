@@ -1,12 +1,29 @@
 from django.conf.urls import patterns, include, url
-
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'emergencycare.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+    url(r'^$','ficha.views.index'),
+    url(r'^login/$','ficha.views.ingresar'),
+    url(r'^logout/$','ficha.views.cerrar'),
+    
+    url(r'^home/$','ficha.views.home'),
+    url(r'^ficha/$','ficha.views.ficha_ingresar'),
+    url(r'^ficha2/$','ficha.views.ficha_ingresar2'),
 
-    url(r'^admin/', include(admin.site.urls)),
-)
+    url(r'^ficha/(?P<folio>\d+)$','ficha.views.ficha_ver'),
+    url(r'^ficha/modificar/(?P<folio>\d+)$','ficha.views.ficha_modificar'),
+    
+    url(r'^ficha/listado/$','ficha.views.ficha_redirect'),
+
+    url(r'^ficha/listado/(?P<page>\d+)$','ficha.views.ficha_listado'),
+  
+
+   	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+	url(r'^admin/', include(admin.site.urls)),
+	
+	url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
+	)+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

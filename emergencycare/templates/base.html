@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title> {% block title %} EmergencyCare {% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/justified-nav.css" rel="stylesheet">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+
+  </head>
+
+  <body>
+
+
+     
+    <div class="container">
+      <img src="{{STATIC_URL}}images/EmergencyCare-header.png"></img>
+
+      <div class="masthead">
+              </div>
+
+      {% block breadcrumb %}
+      <br/>
+      
+      <ol class="breadcrumb">
+        <li><a href="/home">Inicio</a></li>
+      </ol>
+      {% endblock %}
+    
+
+    </div><!-- /.container -->
+    <div class="container">
+
+     <div class="row row-offcanvas row-offcanvas-right">
+
+       <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+          <div class="list-group">
+            <a href="#" class="list-group-item active">Inicio</a>
+            <a href="/ficha" class="list-group-item">Ingresar Ficha</a>
+            <a href="/ficha/listado" class="list-group-item">Listado de Fichas</a>
+            <a href="/logout" class="list-group-item">Salir</a>
+            
+          </div>
+        </div><!--/span-->
+
+        <div class="col-xs-12 col-sm-9">
+           {% block container %}
+           {% endblock %}
+        </div>    
+
+      </div><!--/row-->
+
+    
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p>Desarrollado por <a href="http://www.afachile.cl">AfaChile</a> </p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+      <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.js"></script>
+
+  </body>
+</html>

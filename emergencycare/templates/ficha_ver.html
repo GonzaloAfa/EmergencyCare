@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+    
+
+{% block container %}
+
+	<h1>Ficha N°: {{ficha.id}}</h1>
+	<h4>Fecha de ingreso: {{ficha.date_start}} </h4>
+	<hr>
+	<div class="row marketing">
+        <div class="col-lg-6">
+          <h2>Datos del paciente</h2>
+          <dl class="dl-horizontal">
+          	<dt>Nombre</dt>
+          	<dd>{{ficha.nombre}}</dd>
+
+          	<dt>Apellido</dt>
+          	<dd>{{ficha.apellido}}</dd>
+
+          	<dt>Rut</dt>
+          	<dd>{{ficha.rut}}</dd>
+
+          	<dt>Edad</dt>
+          	<dd>{{ficha.edad}}</dd>
+
+          	<dt>Diagnostico</dt>
+          	<dd>{{ficha.diagnostico}}</dd>
+          </dl>
+
+          <h2>Datos del traslado</h2>
+          <dl class="dl-horizontal">
+          	<dt>Responsable</dt>
+          	<dd>{{ficha.responsable}}</dd>
+
+          	<dt>Teléfono</dt>
+          	<dd>{{ficha.telefono}}</dd>
+
+
+          	<dt>Dirección Origen</dt>
+          	<dd>{{ficha.origen}}</dd>
+
+          	<dt>Medico derivador</dt>
+          	<dd>{{ficha.medico_derivador}}</dd>
+
+          	<dt>Direccion destino</dt>
+          	<dd>{{ficha.destino}}</dd>
+
+          	<dt>Medico receptor</dt>
+          	<dd>{{ficha.medico_receptor}}</dd>
+
+          	<dt>Causa</dt>
+          	<dd>{{ficha.causa}}</dd>
+          </dl>
+        </div>
+
+        <div class="col-lg-6">
+          <h2>Datos internos</h2>
+          <dl class="dl-horizontal">
+          	<dt>Km inicio</dt>
+          	<dd>{{ficha.km_inicio}}</dd>
+
+          	<dt>Km termino</dt>
+          	<dd>{{ficha.km_termino}}</dd>
+
+          	<dt>Hora inicio</dt>
+          	<dd>{{ficha.hora_inicio}}</dd>
+
+          	<dt>Hora termino</dt>
+          	<dd>{{ficha.hora_termino}}</dd>
+
+          	<dt>Hora inicio QTH</dt>
+          	<dd>{{ficha.hora_QTH_inicio}}</dd>
+
+          	<dt>Hora termino QTH</dt>
+          	<dd>{{ficha.hora_QTH_final}}</dd>
+          </dl>
+
+        </div>
+    </div>
+    <hr>
+
+
+
+
+{% endblock %}
