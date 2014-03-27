@@ -176,15 +176,7 @@ def ingresar(request):
 def cerrar(request):
 	logout(request)
 	return HttpResponseRedirect('/')
-
-
-
-
-
-
-
-
-
+	
 
 def ficha_ingresar2(request):
 	if request.POST:
@@ -199,4 +191,28 @@ def ficha_ingresar2(request):
 
 
 
+def user_login(request):
 
+	if not request.user.is_anonymous():
+		return HttpResponseRedirect('/home')
+
+	if request.method == 'POST':
+
+		username = request.POST['username']
+		password = request.POST['password']
+
+		access = authenticate(username=username, password=password)
+
+		if access is not None:
+			if access.is_active:
+
+				login(request, access)
+				return HttpResponseRedirect('/home/')
+			else:
+				return HttpResponseRedirect('/')
+		else:
+			print "Invalid login details: {0}, {1}".format(username, password)
+			return HttpResponseRedirect('/')
+
+	else:
+		return render_to_response('login.html', context_instance=RequestContext(request))

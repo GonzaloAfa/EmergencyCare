@@ -7,7 +7,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$','ficha.views.index'),
-    url(r'^login/$','ficha.views.ingresar'),
+    url(r'^login/$', 'ficha.views.user_login'),
+ #   url(r'^login/$','ficha.views.ingresar'),
     url(r'^logout/$','ficha.views.cerrar'),
     
     url(r'^home/$','ficha.views.ficha_redirect'),
