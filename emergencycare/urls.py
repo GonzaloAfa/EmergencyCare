@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^login/$','ficha.views.ingresar'),
     url(r'^logout/$','ficha.views.cerrar'),
     
-    url(r'^home/$','ficha.views.home'),
+    url(r'^home/$','ficha.views.ficha_redirect'),
     url(r'^ficha/$','ficha.views.ficha_ingresar'),
     url(r'^ficha2/$','ficha.views.ficha_ingresar2'),
 

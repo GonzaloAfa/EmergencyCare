@@ -35,6 +35,7 @@ def home(request):
 
 @login_required(login_url='/')
 def ficha_ingresar(request):
+
 	if request.POST:
 		form = FichaForm(request.POST)
 		if form.is_valid():
@@ -145,8 +146,10 @@ def ficha_modificar(request, folio):
 	return render_to_response('ficha.html',{'form':form}, context_instance=RequestContext(request))
 
 def ingresar(request):
+
 	if not request.user.is_anonymous():
 		return HttpResponseRedirect('/home')
+
 	if request.method == 'POST':
 		form    = AuthenticationForm(request.POST)
 		if form.is_valid:
@@ -161,6 +164,8 @@ def ingresar(request):
 					return render_to_response('login.html', context_instance=RequestContext(request))
 			else:
 				return render_to_response('login.html', context_instance=RequestContext(request))
+		else:
+			return render_to_response('login.html', context_instance=RequestContext(request))
 	else:
 		form = AuthenticationForm()
 	return render_to_response('login.html', {'formulario':form}, context_instance=RequestContext(request))
