@@ -22,7 +22,7 @@
 
      
     <div class="container">
-      <img src="{{STATIC_URL}}images/EmergencyCare-header.png"></img>
+      <a href="/home"><img src="{{STATIC_URL}}images/EmergencyCare-header.png"></img></a>
 
       <div class="masthead">
               </div>
@@ -30,28 +30,45 @@
       {% block breadcrumb %}
       <br/>
       
-      <ol class="breadcrumb">
-        <li><a href="/home">Inicio</a></li>
-      </ol>
       {% endblock %}
     
 
     </div><!-- /.container -->
     <div class="container">
 
+        <div class="navbar navbar-inverse">
+          
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Subir</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">EmergencyCare</a>
+          </div>
+          
+          {% block navbar %}  
+          <ul class="nav navbar-nav">
+            <li {% block home %} {% endblock%}><a href="/ficha">Ingresar</a></li>
+            <li {% block client %} {% endblock%}><a href="/home">Listado</a></li>
+            <li {% block problem %} {% endblock%}><a href="/complejidad">Complejidad</a></li>
+            <li {% block pay %} {% endblock%}><a href="/archivados">Archivados</a></li>
+          </ul>
+          {% endblock %}
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"></a></li>
+          </ul>
+          <p class="navbar-text navbar-right">Hola {{user.username|capfirst}} <a href="/logout" class="navbar-link">(Salir)</a></p>
+          
+
+        </div><!-- /.nav-collapse -->
+
+
      <div class="row row-offcanvas row-offcanvas-right">
 
-       <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-          <div class="list-group">
-            <a href="#" class="list-group-item active">Inicio</a>
-            <a href="/ficha" class="list-group-item">Ingresar Ficha</a>
-            <a href="/ficha/listado" class="list-group-item">Listado de Fichas</a>
-            <a href="/logout" class="list-group-item">Salir</a>
-            
-          </div>
-        </div><!--/span-->
-
-        <div class="col-xs-12 col-sm-9">
+        <div class="col-xs-12 col-sm-12">
            {% block container %}
            {% endblock %}
         </div>    
