@@ -1,9 +1,19 @@
 from django import forms
-from models import Ficha
+from models import Ficha, Requerimientos
+
 
 class FichaForm(forms.ModelForm):
 	class Meta:
 		model = Ficha
+		exclude = ('hora_inicio','hora_llegada','hora_QTH_inicio','hora_QTH_final')
+
+class EditarFichaForm(forms.ModelForm):
+	class Meta:
+		model = Ficha
+
+class RequerimientosForm(forms.ModelForm):
+	class Meta:
+		model = Requerimientos 
 
 class IngresarFichaForm(forms.Form):
 

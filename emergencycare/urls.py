@@ -13,14 +13,18 @@ urlpatterns = patterns('',
     
     url(r'^home/$','ficha.views.ficha_redirect'),
     url(r'^ficha/$','ficha.views.ficha_ingresar'),
-    url(r'^ficha2/$','ficha.views.ficha_ingresar2'),
+
+    url(r'^complejidad/$','ficha.views.complejidad'),
+
 
     url(r'^ficha/(?P<folio>\d+)$','ficha.views.ficha_ver'),
     url(r'^ficha/modificar/(?P<folio>\d+)$','ficha.views.ficha_modificar'),
     
     url(r'^ficha/listado/$','ficha.views.ficha_redirect'),
-
     url(r'^ficha/listado/(?P<page>\d+)$','ficha.views.ficha_listado'),
+
+    url(r'^archivados/$','ficha.views.ficha_archivados_redirect'),
+    url(r'^ficha/archivados/(?P<page>\d+)$','ficha.views.ficha_archivados'),
   
 
    	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+    
+
+
+
+{% block container %}
+
+{% load bootstrap %}
+
+  <div class="col-md-8">
+    <h2>Requerimientos | Condición del Paciente</h2>
+    <form id='ficha_ingresar' method='POST' action='' class="form-horizontal" role="form">
+
+      {% csrf_token %}
+      {{ form|bootstrap_horizontal}}
+
+      <p class="text-right">
+        <button type="button" class="btn btn-danger" id="reset">Reiniciar</button>
+        <button type="submit" class="btn btn-success">Enviar</button>
+      </p>
+    </form>
+  </div>
+  <div class="col-md-4">
+    <h2 class="text-center">Tipo de complejidad</h2>
+    <div id="status" class="text-center"></div>
+  </div>
+<!--
+<div class="row">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-6">
+
+    <h2>Necesita</h2>
+    <br/>
+
+    <label class="checkbox">
+        <input type="checkbox" id="ventilacion_mecanica" /> Ventilación mecánica
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" id="via_venosa" /> Vía Venosa
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" id="via_venosa_central" /> Vía Venosa central
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" id="via_venosa_periferica" /> Vía Venosa periférica
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" id="bic" /> BIC (Bomba de infusión continua)
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" id="monitorizacion" /> Monitorizacion
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" id="marcapaso" /> Marcapaso
+    </label>
+
+    <br/>
+    <button type="button" class="btn btn-success" >Guardar</button>
+    <button type="button" class="btn btn-danger" id="reset">Reiniciar</button>
+
+  </div>
+   <div class="col-md-5">
+   </div>
+</div>  -->
+
+    
+
+
+<script type="text/javascript">
+
+      var status = 0;
+
+      $('#id_monitorizacion').click(medio);
+      $('#id_ventilacion_mecanica').click(alto);
+      $('#id_inmovilacion').click(medio);
+      $('#id_marcapaso').click(alto);
+
+
+      $('#id_oxigenoterapia').change(function(){
+        var selectedOption  = $(this).find('option:selected');
+        var selectedValue   = $(selectedOption).val();
+
+        if (selectedValue == 1)
+          normal();          
+        else if (selectedValue == 2)
+          medio();
+        else if (selectedValue == 3)
+          alto();
+      });
+
+
+      $('#id_acceso_vascular').change(function(){
+
+      }).change();
+
+
+      $('#id_hemodinamia').change(function(){
+
+      }).change();
+
+
+
+      $('#id_ventilatorio').change(function(){
+
+      }).change();
+
+
+
+      $('#id_glasgow').change(function(){
+
+      }).change();
+
+
+
+
+      $('#reset').click(reset)
+
+     
+
+
+      function tipo_estado(){
+        var html='';
+
+        if(status == 1){
+          html='<h2><span class="label label-success">Normal</span></h2>';
+          $('#status').html(html);
+        }
+        else if(status == 2){
+           html='<h2><span class="label label-warning">Media</span></h2>';
+          $('#status').html(html);
+        }else if(status == 3){
+           html='<h2><span class="label label-danger">Alta</span></h2>';
+          $('#status').html(html);
+        }else {
+          $('#status').html('');
+        }
+
+      }
+
+      function reset(){
+        status = 0;
+
+        $('#ventilacion_mecanica').attr('checked', false);
+        $('#via_venosa').attr('checked', false);
+        $('#via_venosa_central').attr('checked', false);
+        $('#via_venosa_periferica').attr('checked', false);
+        $('#bic').attr('checked', false);
+        $('#monitorizacion').attr('checked', false);
+        $('#marcapaso').attr('checked', false);
+
+        tipo_estado();
+      }
+
+      function normal(){
+        if ($(this).is(':checked')) {            
+          status = Math.max(status,1); 
+          tipo_estado();
+        }        
+      }
+
+      function medio(){
+        if ($(this).is(':checked')) {            
+          status = Math.max(status,2); 
+          tipo_estado();
+        }        
+      }
+
+      function alto(){
+        if ($(this).is(':checked')) {            
+          status = Math.max(status,3); 
+          tipo_estado();
+        }        
+      }
+
+
+      
+
+
+    </script>
+
+
+{% endblock %}

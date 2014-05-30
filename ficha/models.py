@@ -1,45 +1,46 @@
 from django.db import models
 
-# Create your models here.
 
-class Sexo(models.Model):
-	tipo = models.CharField(max_length=10)
-	def __unicode__(self):
-		return self.tipo
+CHOICES_CAUSA = (
+    ('Examen', 'Examen'),
+    ('Derivacion', 'Derivacion'),
+    ('Domicilio', 'Domicilio'),
+)
+
+CHOICES_ESTADO = (
+    ('Programado', 'Programado'),
+    ('Proceso', 'En Proceso'),
+    ('Archivo', 'Archivado'),
+)
+
+CHOICES_MOVIL = (
+	('Normal','Basico'),
+	('Medio','Mediana Complejidad'),
+	('Alto','Alta Complejidad'),
+	)
+
+CHOICES_GENERO =(
+	('M','Masculino'),
+	('F','Femenino'),
+)
 
 
-class Causa (models.Model):
-	causa  = models.CharField(max_length=30)
-	def __unicode__(self):
-		return self.causa 
-
-class TipoMovil (models.Model):
-	tipo_movil = models.CharField(max_length=30)
-	def __unicode__(self):
-		return self.tipo_movil
-
-class EstadoFicha (models.Model):
-	estado_ficha = models.CharField(max_length=15)
-	def __unicode__(self):
-		return self.estado_ficha
-
-class Glasgow (models.Model):
-	glasgow = models.CharField(max_length=10)
 
 
 
 
 class Ficha (models.Model):
 
-	date_start 		= models.DateTimeField(auto_now=True)
-	estado_ficha   	= models.ForeignKey(EstadoFicha)
-
+	
+	estado_ficha = models.CharField(max_length=30,choices=CHOICES_ESTADO)
+	
 	#Datos del paciente
 	nombre		= models.CharField(max_length=60)
 	apellido 	= models.CharField(max_length=60)
 	rut			= models.CharField(max_length=12)
 	edad		= models.IntegerField()
-	sexo 		= models.ForeignKey(Sexo)
+	sexo 		= models.CharField(max_length=10, choices=CHOICES_GENERO)
+	
 	diagnostico	= models.TextField()
 
 	
@@ -50,42 +51,25 @@ class Ficha (models.Model):
 	medico_derivador= models.CharField(max_length=60)
 	destino			= models.CharField(max_length=120)
 	medico_receptor	= models.CharField(max_length=60)
-	causa			= models.ForeignKey(Causa)
-
+	causa  			= models.CharField(max_length=30,choices=CHOICES_CAUSA)
+	
 
 	#Datos gravedad del paciente
-	tipo_movil 		= models.ForeignKey(TipoMovil)
+	tipo_movil 		= models.CharField(max_length=30, choices=CHOICES_MOVIL)
+	
+
+	date_start 			= models.DateTimeField(auto_now=True)
+	hora_programada 	= models.TimeField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
 
 	#datos internos que despues se modifican
-	km_inicio		= models.IntegerField(blank=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	km_termino		= models.IntegerField(blank=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	hora_inicio		= models.CharField(max_length=5, blank=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	hora_llegada	= models.CharField(max_length=5, blank=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	
-	hora_QTH_inicio	= models.CharField(max_length=5, blank=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	hora_QTH_final	= models.CharField(max_length=5, blank=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
+	km_inicio			= models.PositiveIntegerField(blank=True, null=True)
+	km_termino			= models.PositiveIntegerField(blank=True, null=True)
 
-
-	# requerimientos del paciente
+	hora_inicio_Espera	= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
+	hora_llegada_Espera	= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
 	
-	# Oxigenoterapia -> cantidad
-	# ventilacion mecanica
-	# Via Venosa 
-	# via venosa central
-	# via venosa periferica
-	# BIC (Bomba de infusion continua)
-	# Monitorizacion
-	# marcapaso
-	# otro -> 
-
-	
-	# Condicion
-	# hemodinamia estable
-	# hemodinamia inestable
-	# glasgow
-	# > 15
-	# > 9 - 14
-	# > 0 - 8
+	hora_QTH_inicio		= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
+	hora_QTH_final		= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
 
 
 	def __unicode__(self):
@@ -93,7 +77,54 @@ class Ficha (models.Model):
 
 
 
+CHOICES_OXIGENOTERAPIA = (
+	('1','1'),
+	('2','2'),
+	('3','3'),
+)
+
+CHOICES_ACCESO = (
+	('1','Periferico'),
+	('2','Central'),
+	)
+
+CHOICES_HEMODINAMIA =(
+	('1','Estable'),
+	('2', 'Inestable')
+	)
+
+CHOICES_VENTILATORIO = (
+	('1','Eupneico'),
+	('2','Alterado'),
+	)
+	
+CHOICES_GLASGOW = (
+	('1', '0 - 8'),
+	('2', '9 - 14'),
+	('3', 'Mayor a 14'),
+	)
+
+class Requerimientos(models.Model):
+
+	tipo_movil				= models.CharField(max_length=20, choices=CHOICES_MOVIL)
+
+	monitorizacion 			= models.BooleanField(blank=True)
+	ventilacion_mecanica 	= models.BooleanField(blank=True)	
+	inmovilacion			= models.BooleanField(blank=True)
+	marcapaso				= models.BooleanField(blank=True)
+
+	BIC 					= models.CharField(max_length=20, blank=True)
+	oxigenoterapia 			= models.CharField(max_length=20, choices=CHOICES_OXIGENOTERAPIA, blank=True);
+	acceso_vascular			= models.CharField(max_length=20, choices=CHOICES_ACCESO, blank=True)
+
+#Condicion Paciente
+	hemodinamia				= models.CharField(max_length=20, choices=CHOICES_HEMODINAMIA, blank=True)
+	ventilatorio			= models.CharField(max_length=20, choices=CHOICES_VENTILATORIO, blank=True)
+	glasgow					= models.CharField(max_length=20, choices=CHOICES_GLASGOW, blank=True)
 
 
-
-
+class Tripulacion (models.Model):
+	conductor	=	models.CharField(max_length=30)
+	tens 		= 	models.CharField(max_length=20)
+	enfermera	=	models.CharField(max_length=30)
+	medico 		= 	models.CharField(max_length=30)

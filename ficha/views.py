@@ -20,8 +20,9 @@ from django.core.paginator import InvalidPage
 
 from django.core.context_processors import csrf
 
-from forms import FichaForm
+from forms import FichaForm, RequerimientosForm
 from forms import IngresarFichaForm
+from forms import EditarFichaForm
 
 from ficha.models import Ficha
 
@@ -35,7 +36,6 @@ def home(request):
 
 @login_required(login_url='/')
 def ficha_ingresar(request):
-
 	if request.POST:
 		form = FichaForm(request.POST)
 		if form.is_valid():
@@ -50,6 +50,14 @@ def ficha_ingresar(request):
 @login_required(login_url='/')
 def ficha_redirect(request):
     return HttpResponseRedirect('/ficha/listado/1')
+
+
+
+@login_required(login_url='/')
+def ficha_archivados_redirect(request):
+    return HttpResponseRedirect('/ficha/archivados/1')
+
+
 
 
 @login_required(login_url='/')
@@ -70,6 +78,24 @@ def ficha_listado(request, page):
 
 	return render_to_response('ficha_listado.html',{'list':lista}, context_instance=RequestContext(request))
 
+@login_required(login_url='/')
+def ficha_archivados(request, page):
+	listado = Ficha.objects.all().order_by('date_start').reverse()
+	paginator = Paginator(listado, 2)
+
+	try:
+		pages = int(page)
+	except:
+		pages = 1
+
+	try:
+		lista = paginator.page(pages)
+
+	except (InvalidPage):
+		lista = paginator.page(paginator.num_pages)
+
+	return render_to_response('ficha_archivados.html',{'list':lista}, context_instance=RequestContext(request))
+
 
 @login_required(login_url='/')
 def ficha_ver(request, folio):
@@ -82,7 +108,7 @@ def ficha_modificar(request, folio):
 	p = Ficha.objects.get(id=folio)
 
 	if request.method == 'POST':
-		form = FichaForm(request.POST)
+		form = EditarFichaForm(request.POST)
 		if form.is_valid():
 			p.estado_ficha 		= form.cleaned_data['estado_ficha']
 			p.nombre			= form.cleaned_data['nombre']
@@ -102,10 +128,11 @@ def ficha_modificar(request, folio):
 			
 			p.tipo_movil		= form.cleaned_data['tipo_movil']
 
+			p.hora_programada	= form.cleaned_data['hora_programada']
 			p.km_inicio			= form.cleaned_data['km_inicio']
 			p.km_termino		= form.cleaned_data['km_termino']
-			p.hora_inicio 		= form.cleaned_data['hora_inicio']
-			p.hora_llegada		= form.cleaned_data['hora_llegada']
+			p.hora_inicio_Espera 		= form.cleaned_data['hora_inicio_Espera']
+			p.hora_llegada_Espera		= form.cleaned_data['hora_llegada_Espera']
 			p.hora_QTH_inicio 	= form.cleaned_data['hora_QTH_inicio']
 			p.hora_QTH_final	= form.cleaned_data['hora_QTH_final']
 
@@ -114,7 +141,7 @@ def ficha_modificar(request, folio):
 			return HttpResponseRedirect('/ficha/listado')
 
 	if request.method == 'GET':
-		form = FichaForm(initial={
+		form = EditarFichaForm(initial={
 			'estado_ficha'		: p.estado_ficha,
 			'nombre' 			: p.nombre,
 			'apellido'			: p.apellido,
@@ -132,44 +159,18 @@ def ficha_modificar(request, folio):
 			'causa'				: p.causa,
 
 			'tipo_movil'		: p.tipo_movil,
+			'hora_programada'	: p.hora_programada,
 
 			'km_inicio'			: p.km_inicio,
 			'km_termino'		: p.km_termino,
-			'hora_inicio'		: p.hora_inicio,
-			'hora_llegada'		: p.hora_llegada,
+			'hora_inicio_Espera': p.hora_inicio_Espera,
+			'hora_llegada_Espera': p.hora_llegada_Espera,
 
 			'hora_QTH_inicio'	: p.hora_QTH_inicio,
 			'hora_QTH_final'	: p.hora_QTH_final,
 
 			})
-
 	return render_to_response('ficha.html',{'form':form}, context_instance=RequestContext(request))
-
-def ingresar(request):
-
-	if not request.user.is_anonymous():
-		return HttpResponseRedirect('/home')
-
-	if request.method == 'POST':
-		form    = AuthenticationForm(request.POST)
-		if form.is_valid:
-			username    = request.POST['username']
-			password    = request.POST['password']
-			access      = authenticate(username=username, password=password)
-			if access is not None:
-				if access.is_active:
-					login(request, access)
-					return HttpResponseRedirect('/home')
-				else:
-					return render_to_response('login.html', context_instance=RequestContext(request))
-			else:
-				return render_to_response('login.html', context_instance=RequestContext(request))
-		else:
-			return render_to_response('login.html', context_instance=RequestContext(request))
-	else:
-		form = AuthenticationForm()
-	return render_to_response('login.html', {'formulario':form}, context_instance=RequestContext(request))
-
 
 
 @login_required(login_url='/')
@@ -216,3 +217,7 @@ def user_login(request):
 
 	else:
 		return render_to_response('login.html', context_instance=RequestContext(request))
+
+def complejidad(request):
+	form = RequerimientosForm()
+	return render_to_response('complejidad.html',{'form': form }, context_instance=RequestContext(request))
