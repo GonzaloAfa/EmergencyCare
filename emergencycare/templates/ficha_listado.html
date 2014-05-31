@@ -28,9 +28,15 @@
 			<td>{{element.destino|capfirst}}</td>
 			<td>{{element.estado_ficha|capfirst}}</td>
 			<td>
+				<a href="/complejidad/{{element.id}}">
+					<button type="button" class="btn btn-default btn-xs">
+					  <span class="glyphicon glyphicon-bookmark"></span> Tipo Movil
+					</button>
+				</a>
+
 				<a href="/ficha/{{element.id}}">
 					<button type="button" class="btn btn-success btn-xs">
-					  <span class="glyphicon glyphicon-zoom-in"></span> Ver
+					  <span class="glyphicon glyphicon-check"></span> Ver
 					</button>
 				</a>
 
@@ -39,11 +45,7 @@
 					  <span class="glyphicon glyphicon-pencil"></span> Editar
 					</button>
 				</a>
-<!--
-				<button type="button" class="btn btn-danger btn-xs">
-				  <span class="glyphicon glyphicon-trash"></span> Borrar
-				</button>
--->
+
 			</td>
 		</tr>
 		{% endfor %}

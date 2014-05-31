@@ -106,6 +106,7 @@ CHOICES_GLASGOW = (
 
 class Requerimientos(models.Model):
 
+	ficha 					= models.CharField(max_length=20)
 	tipo_movil				= models.CharField(max_length=20, choices=CHOICES_MOVIL)
 
 	monitorizacion 			= models.BooleanField(blank=True)

@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     url(r'^home/$','ficha.views.ficha_redirect'),
     url(r'^ficha/$','ficha.views.ficha_ingresar'),
 
-    url(r'^complejidad/$','ficha.views.complejidad'),
+    url(r'^complejidad/(?P<ficha>\d+)$','ficha.views.complejidad'),
 
 
     url(r'^ficha/(?P<folio>\d+)$','ficha.views.ficha_ver'),

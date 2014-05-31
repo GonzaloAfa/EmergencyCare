@@ -21,7 +21,6 @@ from django.core.paginator import InvalidPage
 from django.core.context_processors import csrf
 
 from forms import FichaForm, RequerimientosForm
-from forms import IngresarFichaForm
 from forms import EditarFichaForm
 
 from ficha.models import Ficha
@@ -177,19 +176,6 @@ def ficha_modificar(request, folio):
 def cerrar(request):
 	logout(request)
 	return HttpResponseRedirect('/')
-	
-
-def ficha_ingresar2(request):
-	if request.POST:
-		form = IngresarFichaForm(request.POST)
-		if form.is_valid():
-			a = form.cleaned_data['estado_ficha']
-
-			return HttpResponseRedirect('/ficha/listado')
-	else:
-		form = IngresarFichaForm()
-	return render_to_response('ficha.html',{'form':form}, context_instance=RequestContext(request))
-
 
 
 def user_login(request):
@@ -218,6 +204,24 @@ def user_login(request):
 	else:
 		return render_to_response('login.html', context_instance=RequestContext(request))
 
-def complejidad(request):
-	form = RequerimientosForm()
-	return render_to_response('complejidad.html',{'form': form }, context_instance=RequestContext(request))
+def complejidad(request, ficha):
+
+	ficha_objects = get_object_or_404(Ficha, id=ficha)
+
+	if ficha_objects is not None:
+		
+		if request.POST:
+			form = RequerimientosForm(request.POST, initial={'ficha' : ficha })
+			if form.is_valid():
+				form.save()
+				return HttpResponseRedirect('/ficha/listado')
+		else:
+			form = RequerimientosForm(initial={
+				'ficha' : ficha 
+				})
+
+		return render_to_response('complejidad.html',{'form': form, 'ficha': ficha_objects }, 
+			context_instance=RequestContext(request))
+	
+	else:
+		return HttpResponseRedirect('/ficha/listado')

@@ -45,15 +45,13 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">EmergencyCare</a>
           </div>
           
           {% block navbar %}  
           <ul class="nav navbar-nav">
-            <li {% block home %} {% endblock%}><a href="/ficha">Ingresar</a></li>
-            <li {% block client %} {% endblock%}><a href="/home">Listado</a></li>
-            <li {% block problem %} {% endblock%}><a href="/complejidad">Complejidad</a></li>
-            <li {% block pay %} {% endblock%}><a href="/archivados">Archivados</a></li>
+            <li {% block ingresar %} {% endblock%}><a href="/ficha">Ingresar</a></li>
+            <li {% block listado %} {% endblock%}><a href="/home">Listado</a></li>
+            <li {% block archivados %} {% endblock%}><a href="/archivados">Archivados</a></li>
           </ul>
           {% endblock %}
 
