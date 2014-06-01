@@ -13,7 +13,7 @@
             <th>Origen</th>
             <th>Destino</th>
             <th>Estado</th>
-            <th>Opciones</th>
+            <th class="text-right">Opciones</th>
             
           </tr>
          </thead>
@@ -26,25 +26,12 @@
 			<td>{{element.origen|capfirst}}</td>
 			<td>{{element.destino|capfirst}}</td>
 			<td>{{element.estado_ficha|capfirst}}</td>
-			<td>
+			<td class="text-right">
 				<a href="/ficha/{{element.id}}">
 					<button type="button" class="btn btn-success btn-xs">
 					  <span class="glyphicon glyphicon-zoom-in"></span> Ver
 					</button>
 				</a>
-
-				<a href="#">
-				<button type="button" class="btn btn-success btn-xs">
-				  <span class="glyphicon glyphicon-trash"></span> Requerimientos
-				</button>
-				</a>
-
-				<a href="/ficha/modificar/{{element.id}}">
-					<button type="button" class="btn btn-warning btn-xs">
-					  <span class="glyphicon glyphicon-pencil"></span> Editar
-					</button>
-				</a>
-
 
 			</td>
 		</tr>

@@ -50,51 +50,22 @@
       </p>
     </form>
   </div>
+<style type="text/css">
+
+@media (min-width: 600px) {
+  .affix,.affix-top {
+      position:fixed;
+  }
+}
+</style>
+
+
   <div class="col-md-4">
-    <h2 class="text-center">Tipo de complejidad</h2>
-    <div id="status" class="text-center"></div>
+    <div id="midCol" data-spy="affix" data-offset-top="300">
+        <h2 class="text-center">Tipo de complejidad</h2>
+        <div id="status" class="text-center"></div>      
+    </div>
   </div>
-<!--
-<div class="row">
-  <div class="col-md-1">
-  </div>
-  <div class="col-md-6">
-
-    <h2>Necesita</h2>
-    <br/>
-
-    <label class="checkbox">
-        <input type="checkbox" id="ventilacion_mecanica" /> Ventilación mecánica
-    </label>
-    <label class="checkbox">
-        <input type="checkbox" id="via_venosa" /> Vía Venosa
-    </label>
-    <label class="checkbox">
-        <input type="checkbox" id="via_venosa_central" /> Vía Venosa central
-    </label>
-    <label class="checkbox">
-        <input type="checkbox" id="via_venosa_periferica" /> Vía Venosa periférica
-    </label>
-    <label class="checkbox">
-        <input type="checkbox" id="bic" /> BIC (Bomba de infusión continua)
-    </label>
-    <label class="checkbox">
-        <input type="checkbox" id="monitorizacion" /> Monitorizacion
-    </label>
-    <label class="checkbox">
-        <input type="checkbox" id="marcapaso" /> Marcapaso
-    </label>
-
-    <br/>
-    <button type="button" class="btn btn-success" >Guardar</button>
-    <button type="button" class="btn btn-danger" id="reset">Reiniciar</button>
-
-  </div>
-   <div class="col-md-5">
-   </div>
-</div>  -->
-
-    
 
 
 <script type="text/javascript">
@@ -111,33 +82,89 @@
         var selectedOption  = $(this).find('option:selected');
         var selectedValue   = $(selectedOption).val();
 
-        if (selectedValue == 1)
-          normal();          
-        else if (selectedValue == 2)
-          medio();
-        else if (selectedValue == 3)
-          alto();
+        console.log(selectedValue);
+
+        if (selectedValue == $.trim(1)){
+          status = Math.max(status,1); 
+          tipo_estado();
+        }                    
+        else if (selectedValue == 2){  
+          status = Math.max(status,2); 
+          tipo_estado();
+        }
+        else if (selectedValue == 3){
+          status = Math.max(status,3); 
+          tipo_estado();
+        }
       });
 
 
       $('#id_acceso_vascular').change(function(){
+        var selectedOption  = $(this).find('option:selected');
+        var selectedValue   = $(selectedOption).val();
+
+        if (selectedValue == $.trim(1)){
+          status = Math.max(status,1); 
+          tipo_estado();
+        }                    
+        else if (selectedValue == 2){  
+          status = Math.max(status,2); 
+          tipo_estado();
+        }
 
       }).change();
 
 
       $('#id_hemodinamia').change(function(){
+        var selectedOption  = $(this).find('option:selected');
+        var selectedValue   = $(selectedOption).val();
+
+        if (selectedValue == $.trim(1)){
+          status = Math.max(status,2); 
+          tipo_estado();
+        }                    
+        else if (selectedValue == 2){  
+          status = Math.max(status,3); 
+          tipo_estado();
+        }
 
       }).change();
 
 
 
       $('#id_ventilatorio').change(function(){
-
+        var selectedOption  = $(this).find('option:selected');
+        var selectedValue   = $(selectedOption).val();
+        
+        if (selectedValue == $.trim(1)){
+          status = Math.max(status,1); 
+          tipo_estado();
+        }                    
+        else if (selectedValue == 2){  
+          status = Math.max(status,2); 
+          tipo_estado();
+        }
+        
       }).change();
 
 
 
       $('#id_glasgow').change(function(){
+        var selectedOption  = $(this).find('option:selected');
+        var selectedValue   = $(selectedOption).val();
+        
+        if (selectedValue == $.trim(1)){
+          status = Math.max(status,3); 
+          tipo_estado();
+        }                    
+        else if (selectedValue == 2){  
+          status = Math.max(status,2); 
+          tipo_estado();
+        }
+        else if (selectedValue == 3){
+          status = Math.max(status,1); 
+          tipo_estado();
+        }
 
       }).change();
 
