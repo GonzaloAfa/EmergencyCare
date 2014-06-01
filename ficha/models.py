@@ -59,7 +59,7 @@ class Ficha (models.Model):
 	
 
 	date_start 			= models.DateTimeField(auto_now=True)
-	hora_programada 	= models.TimeField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
+	hora_programada 	= models.DateTimeField(max_length=10, blank=True, null=True)
 
 	#datos internos que despues se modifican
 	km_inicio			= models.PositiveIntegerField(blank=True, null=True)

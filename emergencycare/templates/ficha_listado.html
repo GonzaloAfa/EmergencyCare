@@ -14,7 +14,7 @@
             <th>Origen</th>
             <th>Destino</th>
             <th>Estado</th>
-            <th>Opciones</th>
+            <th class="text-right">Opciones</th>
             
           </tr>
          </thead>
@@ -28,6 +28,7 @@
 			<td>{{element.destino|capfirst}}</td>
 			<td>{{element.estado_ficha|capfirst}}</td>
 			<td>
+				<div class="text-right">
 				<a href="/complejidad/{{element.id}}">
 					<button type="button" class="btn btn-default btn-xs">
 					  <span class="glyphicon glyphicon-bookmark"></span> Tipo Movil
@@ -45,6 +46,7 @@
 					  <span class="glyphicon glyphicon-pencil"></span> Editar
 					</button>
 				</a>
+				</div>
 
 			</td>
 		</tr>
