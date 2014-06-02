@@ -7,24 +7,26 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$','ficha.views.index'),
-    url(r'^login/$', 'ficha.views.user_login'),
+    url(r'^login/$', 'ficha.views.user_login', name ='login'),
  #   url(r'^login/$','ficha.views.ingresar'),
-    url(r'^logout/$','ficha.views.cerrar'),
+    url(r'^logout/$','ficha.views.cerrar', name ='logout'),
     
-    url(r'^home/$','ficha.views.ficha_redirect'),
-    url(r'^ficha/$','ficha.views.ficha_ingresar'),
-
-    url(r'^complejidad/(?P<ficha>\d+)$','ficha.views.complejidad'),
+    url(r'^home/$','ficha.views.ficha_redirect', name ='home'),
+    url(r'^ficha/ingresar$','ficha.views.ficha_ingresar', name='ingresar'),
 
 
-    url(r'^ficha/(?P<folio>\d+)$','ficha.views.ficha_ver'),
-    url(r'^ficha/modificar/(?P<folio>\d+)$','ficha.views.ficha_modificar'),
+
+    url(r'^ficha/ver/(?P<folio>\d+)$','ficha.views.ficha_ver', name='ver'),
+    url(r'^ficha/modificar/(?P<folio>\d+)$','ficha.views.ficha_modificar', name='modificar'),
+
+    url(r'^ficha/evaluador/(?P<ficha>\d+)$','ficha.views.complejidad', name ='evaluador'),
     
-    url(r'^ficha/listado/$','ficha.views.ficha_redirect'),
-    url(r'^ficha/listado/(?P<page>\d+)$','ficha.views.ficha_listado'),
 
-    url(r'^archivados/$','ficha.views.ficha_archivados_redirect'),
-    url(r'^ficha/archivados/(?P<page>\d+)$','ficha.views.ficha_archivados'),
+    url(r'^listado/$','ficha.views.ficha_redirect', name='listado_fichas'),
+    url(r'^listado/(?P<page>\d+)$','ficha.views.ficha_listado', name='listado'),
+
+    url(r'^archivados/$','ficha.views.ficha_archivados_redirect', name='fichas_archivadas'),
+    url(r'^archivados/(?P<page>\d+)$','ficha.views.ficha_archivados', name='archivados'),
   
 
    	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
