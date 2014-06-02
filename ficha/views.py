@@ -24,10 +24,15 @@ from forms import FichaForm, RequerimientosForm
 from forms import EditarFichaForm
 
 from ficha.models import Ficha
+from ficha.models import ARCHIVO, PROGRAMADO, PROCESO
 
+#usar name url para redireccionar
+from django.core.urlresolvers import reverse
+
+from django.db.models import Q
 
 def index(request):
-	return HttpResponseRedirect('/login')
+	return HttpResponseRedirect(reverse('login'))
 
 @login_required(login_url='/')
 def home(request):
@@ -38,30 +43,26 @@ def ficha_ingresar(request):
 	if request.POST:
 		form = FichaForm(request.POST)
 		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/ficha/listado')
+			nueva_ficha = form.save()
+			return HttpResponseRedirect(reverse('evaluador', args=(nueva_ficha.pk,)))
 	else:
 		form = FichaForm()
 
-	return render_to_response('ficha.html',{'form':form}, context_instance=RequestContext(request))
+	return render_to_response('ingresar.html',{'form':form}, context_instance=RequestContext(request))
 
 
 @login_required(login_url='/')
 def ficha_redirect(request):
-    return HttpResponseRedirect('/ficha/listado/1')
-
-
+    return HttpResponseRedirect(reverse('listado', args=(1,)))
 
 @login_required(login_url='/')
 def ficha_archivados_redirect(request):
-    return HttpResponseRedirect('/ficha/archivados/1')
-
-
+    return HttpResponseRedirect(reverse('archivados', args=(1,)))
 
 
 @login_required(login_url='/')
 def ficha_listado(request, page):
-	listado = Ficha.objects.all().order_by('date_start').reverse()
+	listado = Ficha.objects.filter( Q(estado_ficha = PROGRAMADO) | Q(estado_ficha = PROCESO)  ).order_by('date_start').reverse()
 	paginator = Paginator(listado, 2)
 
 	try:
@@ -69,17 +70,20 @@ def ficha_listado(request, page):
 	except:
 		pages = 1
 
+
 	try:
 		lista = paginator.page(pages)
 
 	except (InvalidPage):
 		lista = paginator.page(paginator.num_pages)
 
-	return render_to_response('ficha_listado.html',{'list':lista}, context_instance=RequestContext(request))
+	return render_to_response('lista_fichas.html',{'list':lista}, context_instance=RequestContext(request))
+
+
 
 @login_required(login_url='/')
 def ficha_archivados(request, page):
-	listado = Ficha.objects.all().order_by('date_start').reverse()
+	listado = Ficha.objects.filter( estado_ficha = ARCHIVO ).order_by('date_start').reverse()
 	paginator = Paginator(listado, 2)
 
 	try:
@@ -93,18 +97,31 @@ def ficha_archivados(request, page):
 	except (InvalidPage):
 		lista = paginator.page(paginator.num_pages)
 
-	return render_to_response('ficha_archivados.html',{'list':lista}, context_instance=RequestContext(request))
+	return render_to_response('lista_archivados.html',{'list':lista}, context_instance=RequestContext(request))
 
 
 @login_required(login_url='/')
 def ficha_ver(request, folio):
 	p = Ficha.objects.get(id=folio)
-	return render_to_response('ficha_ver.html', {'ficha':p}, context_instance=RequestContext(request))
+	return render_to_response('visualizar.html', {'ficha':p}, context_instance=RequestContext(request))
 
 
 @login_required(login_url='/')
 def ficha_modificar(request, folio):
-	p = Ficha.objects.get(id=folio)
+
+	# Nos aseguramos que de sea un numero 
+	try:
+		id = int(folio)
+	except:
+		return HttpResponseRedirect(reverse('home'))
+
+
+	p = get_object_or_404(Ficha, id=folio)
+
+	# Nos aseguramos que no puedan editar una ficha que ya este archivada
+	if p.estado_ficha == ARCHIVO:
+		return HttpResponseRedirect(reverse('home'))
+
 
 	if request.method == 'POST':
 		form = EditarFichaForm(request.POST)
@@ -137,7 +154,7 @@ def ficha_modificar(request, folio):
 
 
 			p.save()
-			return HttpResponseRedirect('/ficha/listado')
+			return HttpResponseRedirect(reverse('home'))
 
 	if request.method == 'GET':
 		form = EditarFichaForm(initial={
@@ -169,7 +186,7 @@ def ficha_modificar(request, folio):
 			'hora_QTH_final'	: p.hora_QTH_final,
 
 			})
-	return render_to_response('ficha.html',{'form':form}, context_instance=RequestContext(request))
+	return render_to_response('ingresar.html',{'form':form}, context_instance=RequestContext(request))
 
 
 @login_required(login_url='/')
@@ -181,7 +198,7 @@ def cerrar(request):
 def user_login(request):
 
 	if not request.user.is_anonymous():
-		return HttpResponseRedirect('/home')
+		return HttpResponseRedirect(reverse('home'))
 
 	if request.method == 'POST':
 
@@ -194,7 +211,7 @@ def user_login(request):
 			if access.is_active:
 
 				login(request, access)
-				return HttpResponseRedirect('/home/')
+				return HttpResponseRedirect(reverse('home'))
 			else:
 				return HttpResponseRedirect('/')
 		else:
@@ -214,7 +231,7 @@ def complejidad(request, ficha):
 			form = RequerimientosForm(request.POST, initial={'ficha' : ficha })
 			if form.is_valid():
 				form.save()
-				return HttpResponseRedirect('/ficha/listado')
+				return HttpResponseRedirect(reverse('home'))
 		else:
 			form = RequerimientosForm(initial={
 				'ficha' : ficha 
@@ -224,4 +241,4 @@ def complejidad(request, ficha):
 			context_instance=RequestContext(request))
 	
 	else:
-		return HttpResponseRedirect('/ficha/listado')
+		return HttpResponseRedirect(reverse('home'))

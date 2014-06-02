@@ -7,17 +7,21 @@ CHOICES_CAUSA = (
     ('Domicilio', 'Domicilio'),
 )
 
+PROGRAMADO  = 'Programado'
+PROCESO 	= 'En Proceso'
+ARCHIVO 	= 'Archivado'
+
 CHOICES_ESTADO = (
-    ('Programado', 'Programado'),
-    ('Proceso', 'En Proceso'),
-    ('Archivo', 'Archivado'),
+    (PROGRAMADO, 	'Programado'),
+    (PROCESO, 		'En Proceso'),
+    (ARCHIVO, 		'Archivado'),
 )
 
 CHOICES_MOVIL = (
 	('Normal','Basico'),
 	('Medio','Mediana Complejidad'),
 	('Alto','Alta Complejidad'),
-	)
+)
 
 CHOICES_GENERO =(
 	('M','Masculino'),
