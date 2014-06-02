@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block container %}
+
+{% load bootstrap %}
+	
+	<form id='ficha_ingresar' method='POST' action='' class="form-horizontal" role="form">
+
+		{% csrf_token %}
+		{{ form | bootstrap_horizontal}}
+
+		<button type="submit" class="btn btn-success">Enviar</button>
+	</form>
+
+<script>
+	$(function() {
+		$("#id_hora_programada").datetimepicker({"pickSeconds": true, "language": "es-cl", "format": "YYYY-MM-DD HH:mm"});
+	});
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title> {% block title %} EmergencyCare {% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/justified-nav.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.css">
+    <link rel="stylesheet" href="{{STATIC_URL}}bootstrap3_datetime/css/bootstrap-datetimepicker.css">
+
+
+    <script src="{{STATIC_URL}}js/jquery.js"></script>
+    <script src="{{STATIC_URL}}js/bootstrap.js"></script>
+
+    <script src="{{STATIC_URL}}bootstrap3_datetime/js/moment.min.js"></script>
+    <script src="{{STATIC_URL}}bootstrap3_datetime/js/bootstrap-datetimepicker.js"></script>
+    <script src="{{STATIC_URL}}bootstrap3_datetime/js/locales/bootstrap-datetimepicker.es.js"></script>
+
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="col-xs-12 col-sm-12">
+        <a href="/"><img class="img-responsive" src="{{STATIC_URL}}images/header.png"></img></a>
+      </div>
+    </div>  
+
+    <div class="container">
+
+
+        <div class="navbar navbar-inverse">
+          
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Subir</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          
+          {% block navbar %}  
+          <ul class="nav navbar-nav">
+            <li {% block ingresar %} {% endblock%}><a href="{% url 'ingresar' %}">
+              <i class="fa fa-wheelchair"></i> Ingresar</a></li>
+            <li {% block listado %} {% endblock%}><a href="{% url 'listado_fichas' %}">
+              <i class="fa fa-users"></i> Listado</a></li>
+            <li {% block archivados %} {% endblock%}><a href="{% url 'fichas_archivadas' %}">
+              <i class="fa fa-archive"></i> Archivados</a></li>
+          </ul>
+          {% endblock %}
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"></a></li>
+          </ul>
+          <p class="navbar-text navbar-right"><i class="fa fa-user"></i>  {{user.username|capfirst}} <a href="/logout" class="navbar-link">(Salir)</a></p>
+          
+
+        </div><!-- /.nav-collapse -->
+
+
+     <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-sm-12">
+           {% block container %}
+           {% endblock %}
+        </div>    
+
+      </div><!--/row-->
+
+    
+
+      <!-- Site footer -->
+      <div class="footer">
+        <p>Desarrollado por <a href="http://www.afachile.cl">AfaChile</a> </p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+      <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.js"></script>
+
+  </body>
+</html>
