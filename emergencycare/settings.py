@@ -96,7 +96,7 @@ STATICFILES_FINDERS = (
 
 
 TEMPLATE_DIRS = (
-    os.path.join(RUTA_PROYECTO,'templates'),
+    os.path.join(SITE_ROOT,'templates'),
 )
 
 MEDIA_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__),'media/'))
