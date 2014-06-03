@@ -3,9 +3,12 @@ from django.db import models
 
 CHOICES_CAUSA = (
     ('Examen', 'Examen'),
+    ('Traslado', 'Traslado'),
     ('Derivacion', 'Derivacion'),
     ('Domicilio', 'Domicilio'),
 )
+
+
 
 PROGRAMADO  = 'Programado'
 PROCESO 	= 'En Proceso'
@@ -31,8 +34,6 @@ CHOICES_GENERO =(
 
 
 
-
-
 class Ficha (models.Model):
 
 	
@@ -44,22 +45,25 @@ class Ficha (models.Model):
 	rut			= models.CharField(max_length=12)
 	edad		= models.IntegerField()
 	sexo 		= models.CharField(max_length=10, choices=CHOICES_GENERO)
-	
+
+	antecedentes_morbidos = models.TextField() # hace un poquito más chico los TextField
 	diagnostico	= models.TextField()
 
+	tipo_aislamiento = models.TextField(max_length=120, blank=True, null=True)
 	
 	#Datos del traslado
-	responsable 	= models.CharField(max_length=60)
+	responsable_del_llamado = models.CharField(max_length=60)
 	telefono		= models.CharField(max_length=13)
 	origen			= models.CharField(max_length=120)
 	medico_derivador= models.CharField(max_length=60)
 	destino			= models.CharField(max_length=120)
 	medico_receptor	= models.CharField(max_length=60)
+
 	causa  			= models.CharField(max_length=30,choices=CHOICES_CAUSA)
-	
+	observacion		= models.TextField()	
 
 	#Datos gravedad del paciente
-	tipo_movil 		= models.CharField(max_length=30, choices=CHOICES_MOVIL)
+#	tipo_movil 		= models.CharField(max_length=30, choices=CHOICES_MOVIL)
 	
 
 	date_start 			= models.DateTimeField(auto_now=True)
@@ -82,10 +86,11 @@ class Ficha (models.Model):
 
 
 CHOICES_OXIGENOTERAPIA = (
-	('1','1'),
-	('2','2'),
-	('3','3'),
+	('1','Naricera'),
+	('2','Mascarilla Fio2 35-50%'),
+	('3','Ventilacion Invasiva|No Invasiva'),
 )
+
 
 CHOICES_ACCESO = (
 	('1','Periferico'),
@@ -103,9 +108,9 @@ CHOICES_VENTILATORIO = (
 	)
 	
 CHOICES_GLASGOW = (
-	('1', '0 - 8'),
-	('2', '9 - 14'),
-	('3', 'Mayor a 14'),
+	('1', '14 - 15'),
+	('2', '9 - 13'),
+	('3', '0 - 8'),
 	)
 
 class Requerimientos(models.Model):
@@ -115,7 +120,7 @@ class Requerimientos(models.Model):
 
 	monitorizacion 			= models.BooleanField(blank=True)
 	ventilacion_mecanica 	= models.BooleanField(blank=True)	
-	inmovilacion			= models.BooleanField(blank=True)
+	inmovilizacion			= models.BooleanField(blank=True)
 	marcapaso				= models.BooleanField(blank=True)
 
 	BIC 					= models.CharField(max_length=20, blank=True)
