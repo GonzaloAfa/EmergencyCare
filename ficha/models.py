@@ -46,10 +46,10 @@ class Ficha (models.Model):
 	edad		= models.IntegerField()
 	sexo 		= models.CharField(max_length=10, choices=CHOICES_GENERO)
 
-	antecedentes_morbidos = models.TextField() # hace un poquito más chico los TextField
+	antecedentes_morbidos = models.TextField() # hace un poquito mas chico los TextField
 	diagnostico	= models.TextField()
 
-	tipo_aislamiento = models.TextField(max_length=120, blank=True, null=True)
+	tipo_aislamiento = models.CharField(max_length=120, blank=True, null=True)
 	
 	#Datos del traslado
 	responsable_del_llamado = models.CharField(max_length=60)
@@ -88,7 +88,7 @@ class Ficha (models.Model):
 CHOICES_OXIGENOTERAPIA = (
 	('1','Naricera'),
 	('2','Mascarilla Fio2 35-50%'),
-	('3','Ventilacion Invasiva|No Invasiva'),
+	('3','Ventilacion Invasiva | No Invasiva'),
 )
 
 

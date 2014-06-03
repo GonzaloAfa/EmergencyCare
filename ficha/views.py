@@ -63,7 +63,7 @@ def ficha_archivados_redirect(request):
 @login_required(login_url='/')
 def ficha_listado(request, page):
 	listado = Ficha.objects.filter( Q(estado_ficha = PROGRAMADO) | Q(estado_ficha = PROCESO)  ).order_by('date_start').reverse()
-	paginator = Paginator(listado, 2)
+	paginator = Paginator(listado, 10)
 
 	try:
 		pages = int(page)
@@ -73,9 +73,9 @@ def ficha_listado(request, page):
 
 	try:
 		lista = paginator.page(pages)
-
 	except (InvalidPage):
 		lista = paginator.page(paginator.num_pages)
+
 
 	return render_to_response('lista_fichas.html',{'list':lista}, context_instance=RequestContext(request))
 
@@ -84,7 +84,7 @@ def ficha_listado(request, page):
 @login_required(login_url='/')
 def ficha_archivados(request, page):
 	listado = Ficha.objects.filter( estado_ficha = ARCHIVO ).order_by('date_start').reverse()
-	paginator = Paginator(listado, 2)
+	paginator = Paginator(listado, 10)
 
 	try:
 		pages = int(page)
@@ -93,9 +93,9 @@ def ficha_archivados(request, page):
 
 	try:
 		lista = paginator.page(pages)
-
 	except (InvalidPage):
 		lista = paginator.page(paginator.num_pages)
+
 
 	return render_to_response('lista_archivados.html',{'list':lista}, context_instance=RequestContext(request))
 
