@@ -24,6 +24,9 @@
     <script src="{{STATIC_URL}}bootstrap3_datetime/js/bootstrap-datetimepicker.js"></script>
     <script src="{{STATIC_URL}}bootstrap3_datetime/js/locales/bootstrap-datetimepicker.es.js"></script>
 
+    {% block custom_css%}
+    {% endblock%}
+
 
   </head>
 
@@ -51,11 +54,11 @@
           
           {% block navbar %}  
           <ul class="nav navbar-nav">
-            <li {% block ingresar %} {% endblock%}><a href="{% url 'ingresar' %}">
+            <li><a href="#">
               <i class="fa fa-wheelchair"></i> Ingresar</a></li>
-            <li {% block listado %} {% endblock%}><a href="{% url 'listado_fichas' %}">
+            <li><a href="#">
               <i class="fa fa-users"></i> Listado</a></li>
-            <li {% block archivados %} {% endblock%}><a href="{% url 'fichas_archivadas' %}">
+            <li><a href="#">
               <i class="fa fa-archive"></i> Archivados</a></li>
           </ul>
           {% endblock %}
@@ -69,15 +72,10 @@
         </div><!-- /.nav-collapse -->
 
 
-     <div class="row row-offcanvas row-offcanvas-right">
-
-        <div class="col-xs-12 col-sm-12">
-           {% block container %}
-           {% endblock %}
-        </div>    
-
-      </div><!--/row-->
-
+        
+      {% block container %}
+      
+      {% endblock %}
     
 
       <!-- Site footer -->

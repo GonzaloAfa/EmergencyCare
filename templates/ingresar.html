@@ -1,22 +1,278 @@
 {% extends "base.html" %}
+{% load bootstrap %}
+{% load staticfiles %}
 
+
+{% block custom_css%}
+    <link href="{% static 'css/step-wizard.css' %}" rel="stylesheet">
+{% endblock%}
 
 {% block container %}
+<div class="container">
 
-{% load bootstrap %}
-	
-	<form id='ficha_ingresar' method='POST' action='' class="form-horizontal" role="form">
+	<div class="col-md-12">
+		<div class="stepwizard">
+            <div class="stepwizard-row setup-panel">
+                <div class="stepwizard-step">
+                    <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                    <p>Datos personales</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+                    <p>Datos del traslado</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+                    <p>Disponibilidad</p>
+                </div>
+    		</div>
+		</div>
+	</div>
 
-		{% csrf_token %}
-		{{ form | bootstrap_horizontal}}
 
-		<button type="submit" class="btn btn-success">Enviar</button>
-	</form>
+	<div class="col-md-12">
+
+		<form id='ficha_ingresar' method='POST' action='{% url "ingresar" %}' class="form-horizontal" role="form">
+			<div class="col-md-offset-3 col-md-6">
+				
+				{% csrf_token %}
+
+				<div class="row setup-content" id="step-1">
+				 	<div class="col-md-12">
+				 		<h3>Datos personales</h3>
+				 		<hr>
+                        <div class="form-group">
+                            {% if errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{errors}}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Nombre</label>
+                            <input maxlength="60" type="text" required="required" class="form-control" placeholder="Nombre" 
+                            name="nombre" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Apellido</label>
+                            <input maxlength="60" type="text" required="required" class="form-control" placeholder="Apellido" 
+                            name="apellido" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Rut</label>
+                            <input maxlength="12" type="text" required="required" class="form-control" placeholder="rut" 
+                            name="rut" />
+                        </div>
+
+                        <div class="form-group">
+                        	<label class="control-label">Edad</label>
+                        	<input maxlength="100" type="text" required="required" class="form-control" placeholder="17" name="edad" pattern="[0-9_ ]+"
+                                 />
+                       	</div>
+
+                        <div class="form-group" >
+                            <label class="control-label">Causa</label>
+                            <select class="form-control" name="causa">
+
+                                 {% for id, name in causa %}
+                                 <option value="{{ id }}">{{ name }}</option>
+                                 {% endfor %}
+
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Diagnóstico (maximo 300 caracteres)</label>
+                            <textarea class="form-control" rows="4" maxlength="300" name="diagnostico"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Observación (maximo 300 caracteres)</label>
+                            <textarea class="form-control" rows="4" maxlength="300" name="observacion"></textarea>
+                        </div>
+
+                        <button class="btn btn-success nextBtn btn-lg pull-right" type="button" >Siguiente</button> 
+
+
+                    </div>
+                </div>
+
+
+				<div class="row setup-content" id="step-2">
+				 	<div class="col-md-12">
+				 		<h3>Datos del traslado</h3>
+				 		<hr>
+                        <div class="form-group">
+                            {% if errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{errors}}
+                                </div>
+                            {% endif %}
+                        </div>
+
+				 		 <div class="form-group" >
+                            <label class="control-label">Tipo de móvil</label>
+                            <select class="form-control" name="tipo_movil">
+                                 {% for id, name in movil %}
+                                 <option value="{{ id }}">{{ name }}</option>
+                                 {% endfor %}
+
+                            </select>
+                        </div>
+
+				 		
+				 		 <div class="form-group">
+                            <label class="control-label">Responsable del traslado</label>
+                            <input maxlength="60" type="text" required="required" class="form-control" placeholder="responsable" 
+                            name="responsable" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Teléfono</label>
+                            <input maxlength="13" type="text" required="required" class="form-control" placeholder="telefono" 
+                            name="telefono" />
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label">Origen del paciente</label>
+                            <input maxlength="120" type="text" required="required" class="form-control" placeholder="origen" 
+                            name="origen" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Medico derivador</label>
+                            <input maxlength="60" type="text" required="required" class="form-control" placeholder="medico_derivador" 
+                            name="medico_derivador" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Destino del paciente</label>
+                            <input maxlength="120" type="text" required="required" class="form-control" placeholder="destino" 
+                            name="destino" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Medico receptor</label>
+                            <input maxlength="60" type="text" required="required" class="form-control" placeholder="medico_receptor" 
+                            name="medico_receptor" />
+                        </div>
+
+                        <button class="btn btn-success nextBtn btn-lg pull-right" type="button" >Siguiente</button>
+
+
+
+				 	</div>
+                </div>
+
+
+				<div class="row setup-content" id="step-3">
+				 	<div class="col-md-12">
+				 		<h3>Disponibilidad</h3>
+				 		<hr>
+                        <div class="form-group">
+                            {% if errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{errors}}
+                                </div>
+                            {% endif %}
+                        </div>
+
+					 	<div class="form-group">
+					 		<label class="control-label">Solicitud</label>
+					 		<select class="form-control" name="solicitud">
+
+                                 {% for id, name in solicitud %}
+                                 <option value="{{ id }}">{{ name }}</option>
+                                 {% endfor %}
+					 		</select>
+					 	</div>
+					 	<div class="form-group">
+					 		<label class="control-label">Fecha y hora para el traslado</label>
+					 		<div class='input-group date' id='datetimepicker1'>
+						 		<input type='text' class="form-control" name="hora_programada" maxlength="20" placeholder="05/05/2010 01:23"/>
+						 		<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+					 	</div>
+
+					 	<button id="final_button" class="btn btn-primary btn-lg pull-right" type="submit">Guardar</button>
+					 </div>
+                </div>
+			</div>
+		</form>
+	</div>
+</div>
 
 <script>
-	$(function() {
-		$("#id_hora_programada").datetimepicker({"pickSeconds": true, "language": "es-cl", "format": "YYYY-MM-DD HH:mm"});
+
+$(function() {
+	$("#datetimepicker1").datetimepicker({
+
+		"pickSeconds": true, 
+		"language": "es-cl", 
+		"format": "YYYY-MM-DD HH:mm"
 	});
+});
+
+
+$(document).ready(function () {
+
+    var navListItems = $('div.setup-panel div a'),
+            allWells = $('.setup-content'),
+            allNextBtn = $('.nextBtn');
+
+    allWells.hide();
+
+    navListItems.click(function (e) {
+        e.preventDefault();
+        var $target = $($(this).attr('href')),
+                $item = $(this);
+
+        if (!$item.hasClass('disabled')) {
+            navListItems.removeClass('btn-primary').addClass('btn-default');
+            $item.addClass('btn-primary');
+            allWells.hide();
+            $target.show();
+            $target.find('input:eq(0)').focus();
+        }
+    });
+
+    allNextBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+            curInputs = curStep.find("input[type='text'],input[type='url']"),
+            isValid = true;
+
+        $(".form-group").removeClass("has-error");
+        for(var i=0; i<curInputs.length; i++){
+            if (!curInputs[i].validity.valid){
+                isValid = false;
+                $(curInputs[i]).closest(".form-group").addClass("has-error");
+            }
+        }
+
+        
+        if (isValid){
+            nextStepWizard.removeAttr('disabled').trigger('click');     
+        }
+        
+    });
+
+    $('div.setup-panel div a.btn-primary').trigger('click');
+});
+
+
+
+$("#final_button").on("click",function(event){
+	$(this).closest("form").submit();
+});
+
+
 </script>
 {% endblock %}
 
