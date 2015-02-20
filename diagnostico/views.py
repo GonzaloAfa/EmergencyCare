@@ -7,26 +7,27 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
-#paginator
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 #usar name url para redireccionar
 from django.core.urlresolvers import reverse
-from django.db.models import Q
-
 from django.core.context_processors import csrf
+import json
 
+from diagnostico.models import CHOICES_OXIGENOTERAPIA, CHOICES_ACCESO, CHOICES_HEMODINAMIA, CHOICES_VENTILATORIO, CHOICES_GLASGOW
 
 def diagnostico(request):
+
+	data 			= {}
+	data['value'] 	= 0
 
 	if request.POST:
 
 		# Boolean
-		monitorizacion 			= 2 if request.POST.get("monitorizacion") else 0
-		ventilacion_mecanica 	= 3 if request.POST.get("ventilacion_mecanica")	else 0
-		inmovilizacion			= 2 if request.POST.get("inmovilizacion") else 0
-		marcapaso				= 3 if request.POST.get("marcapaso") else 0		
-		BIC 					= 2 if request.POST.get("BIC") else 0
+		monitorizacion 			= u'2' if request.POST.get("monitorizacion") else u'0'
+		ventilacion_mecanica 	= u'3' if request.POST.get("ventilacion_mecanica")	else u'0'
+		inmovilizacion			= u'2' if request.POST.get("inmovilizacion") else u'0'
+		marcapaso				= u'3' if request.POST.get("marcapaso") else u'0'		
+		BIC 					= u'2' if request.POST.get("BIC") else u'0'
 
 		# Choices
 		oxigenoterapia 			= request.POST.get("oxigenoterapia")
@@ -42,17 +43,27 @@ def diagnostico(request):
 			inmovilizacion,
 			marcapaso,
 			BIC,
+			oxigenoterapia 	if oxigenoterapia.isdigit()  	else u'0',
+			acceso_vascular if acceso_vascular.isdigit() 	else u'0',
+			hemodinamia 	if hemodinamia.isdigit()  		else u'0',
+			ventilatorio 	if ventilatorio.isdigit()  		else u'0',
+			glasgow 		if glasgow.isdigit()  			else u'0']
 
-			oxigenoterapia 	if oxigenoterapia.isdigit()  	else 0,
-			acceso_vascular if acceso_vascular.isdigit() 	else 0,
-			hemodinamia 	if hemodinamia.isdigit()  		else 0,
-			ventilatorio 	if ventilatorio.isdigit()  		else 0,
-			glasgow 		if glasgow.isdigit()  			else 0]
+		data['value'] = max(diagnostico)
+	
+	return HttpResponse(json.dumps(data),content_type='application/json')
 
-		return max(diagnostico)
-	else
-		return 0
+def evaluador(request):
 
+	data = {
+		'oxigenoterapia' 	: CHOICES_OXIGENOTERAPIA,
+		'acceso'			: CHOICES_ACCESO,
+		'hemodinamia'		: CHOICES_HEMODINAMIA,
+		'ventilatorio'		: CHOICES_VENTILATORIO,
+		'glasgow'			: CHOICES_GLASGOW
+		}
+
+	return render_to_response('diagnostico.html', data, context_instance=RequestContext(request))
 
 
 		

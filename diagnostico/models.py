@@ -3,27 +3,32 @@ from django.db import models
 
 
 CHOICES_OXIGENOTERAPIA = (
+	(0, '-'),	
 	(1, 'Naricera'),
 	(2, 'Mascarilla Fio2 35-50%'),
 	(3, 'Ventilacion Invasiva | No Invasiva'),
 )
 
 CHOICES_ACCESO = (
+	(0, '-'),	
 	(1, 'Periferico'),
 	(2, 'Central'),
 	)
 
 CHOICES_HEMODINAMIA =(
-	(1, 'Estable'),
-	(2, 'Inestable')
+	(0, '-'),	
+	(2, 'Estable'),
+	(3, 'Inestable')
 	)
 
 CHOICES_VENTILATORIO = (
+	(0, '-'),	
 	(1, 'Eupneico'),
 	(2, 'Alterado'),
 	)
 	
 CHOICES_GLASGOW = (
+	(0, '-'),	
 	(1, '14 - 15'),
 	(2, '9 - 13'),
 	(3, '0 - 8'),
