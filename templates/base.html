@@ -17,79 +17,86 @@
     <link rel="stylesheet" href="{{STATIC_URL}}bootstrap3_datetime/css/bootstrap-datetimepicker.css">
 
 
-    <script src="{{STATIC_URL}}js/jquery.js"></script>
-    <script src="{{STATIC_URL}}js/bootstrap.js"></script>
+    <script src="{{STATIC_URL}}js/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+
 
     <script src="{{STATIC_URL}}bootstrap3_datetime/js/moment.min.js"></script>
     <script src="{{STATIC_URL}}bootstrap3_datetime/js/bootstrap-datetimepicker.js"></script>
     <script src="{{STATIC_URL}}bootstrap3_datetime/js/locales/bootstrap-datetimepicker.es.js"></script>
 
+    <style type="text/css">
+
+    .body{
+      min-height: 400px;
+    }
+    .logo-navbar {
+      margin-top: -15px;
+    }
+
+    </style>
     {% block custom_css%}
     {% endblock%}
-
 
   </head>
 
   <body>
-
-    <div class="container">
-      <div class="col-xs-12 col-sm-12">
-        <a href="/"><img class="img-responsive" src="{{STATIC_URL}}images/header.png"></img></a>
-      </div>
-    </div>  
-
-    <div class="container">
-
-
-        <div class="navbar navbar-inverse">
-          
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Subir</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-          </div>
-          
-          {% block navbar %}  
+     <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'home' %}"><img height="40px" src="{{STATIC_URL}}img/EmergencyCare-header-40.png" class="logo-navbar"></a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#">
-              <i class="fa fa-wheelchair"></i> Ingresar</a></li>
-            <li><a href="#">
-              <i class="fa fa-users"></i> Listado</a></li>
-            <li><a href="#">
-              <i class="fa fa-archive"></i> Archivados</a></li>
+
+            <li class="active"><a href="{% url 'ingresar_ficha' %}">Ingresar traslado</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Derivaciones <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">En lista</a></li>
+                  <li><a href="#">Realizadas</a></li>
+                  <li><a href="#">Anuladas</a></li>
+                </ul>
+              </li>
           </ul>
-          {% endblock %}
 
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"></a></li>
-          </ul>
-          <p class="navbar-text navbar-right"><i class="fa fa-user"></i>  {{user.username|capfirst}} <a href="/logout" class="navbar-link">(Salir)</a></p>
-          
+          <p class="navbar-text navbar-right">
+            <i class="fa fa-user"></i>  {{user.username|capfirst}}
+              <a href="{% url 'logout' %}" class="navbar-link">
+                (Salir)
+              </a>
+          </p>
 
-        </div><!-- /.nav-collapse -->
-
-
-        
-      {% block container %}
-      
-      {% endblock %}
-    
-
-      <!-- Site footer -->
-      <div class="footer">
-        <p>Desarrollado por <a href="http://www.afachile.cl">AfaChile</a> </p>
+        </div><!--/.nav-collapse -->
       </div>
+    </nav>
 
+
+    <div class="container">
+        
+      <div class="col-md-12 body ">
+        {% block container %}
+
+        {% endblock %}
+      </div>
+    </div>
+    <div class="container">
+        <!-- Site footer -->
+        <div class="footer">
+          <p>Desarrollado por <a href="http://www.afachile.cl">AfaChile</a> </p>
+        </div>
     </div> <!-- /container -->
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-      <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.js"></script>
 
   </body>
 </html>
