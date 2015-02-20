@@ -4,27 +4,18 @@ from django.forms import ModelForm
 
 from django import forms
 
-from models import Ficha, Requerimientos
+from models import *
 
 
 class FichaForm(forms.ModelForm):
 	class Meta:
-		model 			= Ficha
-		hora_programada = forms.DateTimeField(widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
-                                       "pickSeconds": True}))
-
-		exclude = ('km_inicio','km_termino','hora_inicio_Espera',
-			'hora_llegada_Espera', 'hora_QTH_inicio', 'hora_QTH_final')
-		
-
+		model 	= Ficha		
 
 		
-
 class EditarFichaForm(forms.ModelForm):
 	class Meta:
-		model = Ficha
+		model 	= Ficha
 
-class RequerimientosForm(forms.ModelForm):
+class EditarTraslado(forms.ModelForm):
 	class Meta:
-		model = Requerimientos 
-	ficha = forms.CharField(widget=forms.HiddenInput())
+		model 	= Traslado

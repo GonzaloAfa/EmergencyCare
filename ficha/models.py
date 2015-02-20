@@ -1,140 +1,109 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
+
+
+ENLISTADO  	= 'En lista'
+ENCURSO 	= 'En Curso'
+FINALIZADO 	= 'Finalizado'
+ANULADO 	= 'Anulado'
+
+
+CHOICE_SOLICITUD=(
+	('1', 'Programada'),
+	('2', 'De inmediato'),	
+	)
 
 
 CHOICES_CAUSA = (
-    ('Examen', 'Examen'),
-    ('Traslado', 'Traslado'),
-    ('Derivacion', 'Derivacion'),
-    ('Domicilio', 'Domicilio'),
+    ('1', 'Examen'),
+    ('2', 'Traslado'),
+    ('3', 'Derivacion'),
+    ('4', 'Domicilio'),
 )
 
 
-
-PROGRAMADO  = 'Programado'
-PROCESO 	= 'En Proceso'
-ARCHIVO 	= 'Archivado'
-
-CHOICES_ESTADO = (
-    (PROGRAMADO, 	'Programado'),
-    (PROCESO, 		'En Proceso'),
-    (ARCHIVO, 		'Archivado'),
+CHOICES_STATUS = (
+    ('1' , ENLISTADO),
+    ('2' , ENCURSO),
+    ('3' , FINALIZADO),
+    ('4' , ANULADO),
 )
 
 CHOICES_MOVIL = (
-	('Normal','Basico'),
-	('Medio','Mediana Complejidad'),
-	('Alto','Alta Complejidad'),
-)
-
-CHOICES_GENERO =(
-	('M','Masculino'),
-	('F','Femenino'),
+	('Normal', 'Basico'),
+	('Medio' , 'Mediana Complejidad'),
+	('Alto'  , 'Alta Complejidad'),
 )
 
 
+
+class Movil(models.Model):
+	apodo 				= models.CharField(max_length=50)
+	patente				= models.CharField(max_length=6)
+
+	def __unicode__(self):
+		return self.apodo		
 
 
 class Ficha (models.Model):
-
-	
-	estado_ficha = models.CharField(max_length=30,choices=CHOICES_ESTADO)
 	
 	#Datos del paciente
-	nombre		= models.CharField(max_length=60)
-	apellido 	= models.CharField(max_length=60)
-	rut			= models.CharField(max_length=12)
-	edad		= models.IntegerField()
-	sexo 		= models.CharField(max_length=10, choices=CHOICES_GENERO)
+	nombre				= models.CharField(max_length=60)
+	apellido 			= models.CharField(max_length=60)
+	rut					= models.CharField(max_length=12)
+	edad				= models.IntegerField()
+	causa  				= models.CharField(max_length=30,choices=CHOICES_CAUSA)
+	diagnostico			= models.TextField(blank=True, null=True)
+	observacion			= models.TextField(blank=True, null=True)	
 
-	antecedentes_morbidos = models.TextField() # hace un poquito mas chico los TextField
-	diagnostico	= models.TextField()
-
-	tipo_aislamiento = models.CharField(max_length=120, blank=True, null=True)
-	
-	#Datos del traslado
-	responsable_del_llamado = models.CharField(max_length=60)
-	telefono		= models.CharField(max_length=13)
-	origen			= models.CharField(max_length=120)
-	medico_derivador= models.CharField(max_length=60)
-	destino			= models.CharField(max_length=120)
-	medico_receptor	= models.CharField(max_length=60)
-
-	causa  			= models.CharField(max_length=30,choices=CHOICES_CAUSA)
-	observacion		= models.TextField()	
 
 	#Datos gravedad del paciente
-#	tipo_movil 		= models.CharField(max_length=30, choices=CHOICES_MOVIL)
+	tipo_movil 			= models.CharField(max_length=30, choices=CHOICES_MOVIL)
 	
 
-	date_start 			= models.DateTimeField(auto_now=True)
-	hora_programada 	= models.DateTimeField(max_length=10, blank=True, null=True)
-
-	#datos internos que despues se modifican
-	km_inicio			= models.PositiveIntegerField(blank=True, null=True)
-	km_termino			= models.PositiveIntegerField(blank=True, null=True)
-
-	hora_inicio_Espera	= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	hora_llegada_Espera	= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	
-	hora_QTH_inicio		= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
-	hora_QTH_final		= models.CharField(max_length=5, blank=True, null=True, help_text="Ingrese en formano 24 hrs. Ejemplo 22:00")
+	#Datos del traslado
+	responsable 		= models.CharField(max_length=60)
+	telefono			= models.CharField(max_length=13)
+	origen				= models.CharField(max_length=120)
+	medico_derivador 	= models.CharField(max_length=60)
+	destino				= models.CharField(max_length=120)
+	medico_receptor		= models.CharField(max_length=60)
 
 
 	def __unicode__(self):
 		return self.nombre +" "+ self.apellido
 
 
+class Traslado(models.Model):
 
-CHOICES_OXIGENOTERAPIA = (
-	('1','Naricera'),
-	('2','Mascarilla Fio2 35-50%'),
-	('3','Ventilacion Invasiva | No Invasiva'),
-)
+	movil 				= models.ForeignKey(Movil)
 
+	#Datos internos que despues se modifican
+	km_inicio			= models.PositiveIntegerField(blank=True, null=True)
+	km_termino			= models.PositiveIntegerField(blank=True, null=True)
 
-CHOICES_ACCESO = (
-	('1','Periferico'),
-	('2','Central'),
-	)
-
-CHOICES_HEMODINAMIA =(
-	('1','Estable'),
-	('2', 'Inestable')
-	)
-
-CHOICES_VENTILATORIO = (
-	('1','Eupneico'),
-	('2','Alterado'),
-	)
+	inicio				= models.DateTimeField(max_length=10, blank=True, null=True)
+	llegada				= models.DateTimeField(max_length=10, blank=True, null=True)
 	
-CHOICES_GLASGOW = (
-	('1', '14 - 15'),
-	('2', '9 - 13'),
-	('3', '0 - 8'),
-	)
+	inicio_espera 		= models.DateTimeField(max_length=10, blank=True, null=True)
+	termino_espera		= models.DateTimeField(max_length=10, blank=True, null=True)
 
-class Requerimientos(models.Model):
+	tiempo_espera	 	= models.PositiveIntegerField(blank=True, null=True)
 
-	ficha 					= models.CharField(max_length=20)
-	tipo_movil				= models.CharField(max_length=20, choices=CHOICES_MOVIL)
-
-	monitorizacion 			= models.BooleanField(blank=True)
-	ventilacion_mecanica 	= models.BooleanField(blank=True)	
-	inmovilizacion			= models.BooleanField(blank=True)
-	marcapaso				= models.BooleanField(blank=True)
-
-	BIC 					= models.CharField(max_length=20, blank=True)
-	oxigenoterapia 			= models.CharField(max_length=20, choices=CHOICES_OXIGENOTERAPIA, blank=True);
-	acceso_vascular			= models.CharField(max_length=20, choices=CHOICES_ACCESO, blank=True)
-
-#Condicion Paciente
-	hemodinamia				= models.CharField(max_length=20, choices=CHOICES_HEMODINAMIA, blank=True)
-	ventilatorio			= models.CharField(max_length=20, choices=CHOICES_VENTILATORIO, blank=True)
-	glasgow					= models.CharField(max_length=20, choices=CHOICES_GLASGOW, blank=True)
+	def __unicode__(self):
+		return self.id_ficha
 
 
-class Tripulacion (models.Model):
-	conductor	=	models.CharField(max_length=30)
-	tens 		= 	models.CharField(max_length=20)
-	enfermera	=	models.CharField(max_length=30)
-	medico 		= 	models.CharField(max_length=30)
+class Servicio(models.Model):
+	
+	estado_ficha 		= models.CharField(max_length=30, choices=CHOICES_STATUS)
+	solicitud 			= models.CharField(_('Tipo de solicitud'),max_length=30, choices=CHOICE_SOLICITUD)
+
+	date_start 			= models.DateTimeField(auto_now=True)
+
+	# si es programada, se almacenara informacion en este lugar.
+	hora_programada 	= models.DateTimeField(max_length=20, blank=True, null=True)                                                                                                                                                                                                                                                         
+
+	ficha 				= models.ForeignKey(Ficha)
+	traslado  			= models.ForeignKey(Traslado)
