@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+    
+
+{% block container %}
+
+		
+	<h2>Derivaciones en lista</h2>
+	<table  class="table table-condensed">
+  		<thead>
+  		<tr>
+  			<th>Móvil</th>
+            <th>Fecha</th>
+            <th>Paciente</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th class="text-right">Opciones</th>
+          </tr>
+         </thead>
+        <tbody>
+
+		{% for element in servicios %}
+		<tr>
+			<td>
+
+			{% if element.ficha.tipo_movil == 'Normal' %}
+				<span class="label label-success">Basica Complejidad</span>
+			{% elif element.ficha.tipo_movil == 'Medio' %}
+				<span class="label label-warning">Media Complejidad</span>
+			{% elif element.ficha.tipo_movil == 'Alto' %}
+				<span class="label label-warning">Alta Complejidad</span>
+			{% endif %}
+
+			</td>
+
+			<td>{{element.date_start 	| date:'SHORT_DATETIME_FORMAT'}}</td>
+			<td>{{element.ficha.nombre 	| capfirst}} {{element.ficha.apellido | capfirst}}</td>
+			<td>{{element.ficha.origen 	| capfirst}}</td>
+			<td>{{element.ficha.destino | capfirst}}</td>
+
+			<td class="text-right">
+				<a href="{% url 'traslado_agregar' element.id %}" class="btn btn-default btn-xs">
+					  <i class="fa fa-plus"></i> Traslado
+				</a>
+
+				<a href="{% url 'ver_ficha' element.id %}" class="btn btn-info btn-xs">
+					  <i class="fa fa-info"></i> Ver
+				</a>
+				
+			</td>
+		</tr>
+		{% endfor %}
+        </tbody>
+
+  	</table>	
+
+
+{% comment %}
+{%if list %}
+	<ul class="pagination">
+	  {%if list.has_previous %}
+		  <li><a href="{% url 'listado' list.previous_page_number %}">&laquo;</a></li>
+	  {% else %}
+		  <li><a href="{% url 'listado' 1 %}">&laquo;</a></li>
+	  {% endif %}
+
+	  {%if list.has_next %}
+		  <li><a href="{% url 'listado' list.next_page_number %}">&raquo;</a></li>
+	  {% endif %}	  
+	</ul>
+
+	<h4>Página {{list.number}} de {{list.paginator.num_pages}}</h4>
+{% endif%}
+{% endcomment %}
+
+
+
+{% endblock %}

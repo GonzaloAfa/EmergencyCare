@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+    
+
+{% block container %}
+
+	<h1>Servicio N°: {{servicio.ficha.id}}</h1>
+  
+  <div class="col-md-12">
+    <div class="col-md-6">
+      <h3>Fecha de ingreso: {{ficha.date_start}} </h3>
+    </div>
+    <div class="col-md-6">
+      <h3>Tipo de Movil:  
+        {% if servicio.ficha.tipo_movil == 'Normal' %}
+          <span class="label label-success">Baja Complejidad</span>
+        {% elif servicio.ficha.tipo_movil == 'Medio' %}
+          <span class="label label-warning">Mediana Complejidad</span>
+        {% elif servicio.ficha.tipo_movil == 'Alto' %}
+          <span class="label label-danger">Alta Complejidad</span>
+        {% endif %}
+
+
+      </h3>
+    </div>
+  </div>
+  
+  
+	<hr>
+	<div class="row marketing">
+        <div class="col-md-6">
+          <h2>Datos del paciente</h2>
+          <dl class="dl-horizontal">
+          	<dt>Nombre</dt>
+          	<dd>{{servicio.ficha.nombre |capfirst}}</dd>
+
+          	<dt>Apellido</dt>
+          	<dd>{{servicio.ficha.apellido |capfirst}}</dd>
+
+          	<dt>Rut</dt>
+          	<dd>{{servicio.ficha.rut}}</dd>
+
+          	<dt>Edad</dt>
+          	<dd>{{servicio.ficha.edad}}</dd>
+
+            <dt>Causa</dt>
+            <dd>{{servicio.ficha.causa.name}}</dd>
+
+          	<dt>Diagnostico</dt>
+          	<dd>{{servicio.ficha.diagnostico |capfirst}}</dd>
+
+            <dt>Observación</dt>
+            <dd>{{servicio.ficha.observacion |capfirst}}</dd>
+
+          </dl>
+
+          <h2>Datos del traslado</h2>
+
+          <dl class="dl-horizontal">
+          	<dt>Responsable</dt>
+          	<dd>{{servicio.ficha.responsable}}</dd>
+
+          	<dt>Teléfono</dt>
+          	<dd>{{servicio.ficha.telefono}}</dd>
+
+
+          	<dt>Dirección Origen</dt>
+          	<dd>{{servicio.ficha.origen}}</dd>
+
+          	<dt>Medico derivador</dt>
+          	<dd>{{servicio.ficha.medico_derivador}}</dd>
+
+          	<dt>Direccion destino</dt>
+          	<dd>{{servicio.ficha.destino}}</dd>
+
+          	<dt>Medico receptor</dt>
+          	<dd>{{servicio.ficha.medico_receptor}}</dd>
+
+          </dl>
+        </div>
+
+        <div class="col-md-6">
+          <h2>Datos internos</h2>
+          <dl class="dl-horizontal">
+            <dt>Hora Programada</dt>
+            <dd>{{servicio.hora_programada}}</dd>
+
+          	<dt>Km inicio</dt>
+          	<dd>
+              {% if servicio.traslado.km_inicio %}
+                {{servicio.traslado.km_inicio}}</dd>
+              {% endif %}
+          	<dt>Km termino</dt>
+          	<dd>
+              {% if servicio.traslado.km_termino %}
+                {{servicio.traslado.km_termino}}
+              {% endif %}
+            </dd>
+
+          	<dt>Hora inicio del servicio</dt>
+          	<dd>
+              {% if servicio.traslado.inicio %}
+                {{servicio.traslado.inicio}}
+              {% endif %}
+              </dd>
+
+
+          	<dt>Hora termino del servicio</dt>
+          	<dd>
+              {% if servicio.traslado.llegada %}
+              {{servicio.traslado.llegada}}
+              {% endif %}
+            </dd>
+
+
+          	<dt>Hora inicio espera</dt>
+          	<dd>
+              {% if servicio.traslado.inicio_espera %}
+                {{servicio.traslado.inicio_espera}}
+              {% endif %}
+            </dd>
+
+          	<dt>Hora termino espera</dt>
+          	<dd>
+              {% if servicio.traslado.termino_espera%}
+                {{servicio.traslado.termino_espera}}
+              {% endif %}
+            </dd>
+
+            <dt>Total Tiempo espera</dt>
+            <dd>
+              {% if servicio.traslado.tiempo_espera %}
+                {{servicio.traslado.tiempo_espera}}
+              {% endif %}
+            </dd>
+
+
+          </dl>
+
+        </div>
+    </div>
+    <hr>
+
+
+
+
+{% endblock %}

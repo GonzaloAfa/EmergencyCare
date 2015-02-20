@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+
+{% block custom_css%}
+{% endblock%}
+
+{% block container %}
+
+
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+	Contacto
+</button>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Evaluar tipo de movil</h4>
+      </div>
+
+      <div class="modal-body">      	
+
+	  <form role="form" method="POST" action="{% url 'diagnostico' %}">
+	  	{% csrf_token %}
+
+      	<div class="form-group evaluar-checkbox">
+	      	<div class="checkbox">
+		      	<label class="col-md-6">
+		      		<input type="checkbox" id="monitorizacion" name="monitorizacion">
+		      			Monitorización
+		      	</label>
+		      	<label class="col-md-6">
+		      		<input type="checkbox" id="ventilacion_mecanica" name="ventilacion_mecanica">
+		      			Ventilación Mecánicas
+		      	</label>
+		   	</div>
+		   	<div class="checkbox">
+		      	<label class="col-md-6">
+		      		<input type="checkbox" id="inmovilizacion" name="inmovilizacion">
+		      			Inmovilización
+		      	</label>
+		      	<label class="col-md-6">
+		      		<input type="checkbox" id="marcapaso" name="marcapaso">
+		      			Marcapaso
+		      	</label>
+		   	</div>
+		</div>
+
+
+      	<div class="form-group" >
+      		<label class="control-label">Oxigenoterapia</label>
+      		<select class="form-control" name="oxigenoterapia" id="oxigenoterapia">
+      			{% for id, name in oxigenoterapia %}
+      				<option value="{{ id }}">{{ name }}</option>
+      			{% endfor %}
+      		</select>
+      	</div>
+
+
+      	<div class="form-group" >
+      		<label class="control-label">Acceso</label>
+      		<select class="form-control" name="acceso_vascular" id="acceso_vascular"> 
+      			{% for id, name in acceso %}
+      				<option value="{{ id }}">{{ name }}</option>
+      			{% endfor %}
+      		</select>
+      	</div>
+
+      	<div class="form-group" >
+      		<label class="control-label">Hemodinamia</label>
+      		<select class="form-control" name="hemodinamia" id="hemodinamia">
+      			{% for id, name in hemodinamia %}
+      				<option value="{{ id }}">{{ name }}</option>
+      			{% endfor %}
+      		</select>
+      	</div>
+
+      	<div class="form-group" >
+      		<label class="control-label">Ventilatorio</label>
+      		<select class="form-control" name="ventilatorio" id="ventilatorio">
+      			{% for id, name in ventilatorio %}
+      				<option value="{{ id }}">{{ name }}</option>
+      			{% endfor %}
+      		</select>
+      	</div>
+
+      	<div class="form-group" >
+      		<label class="control-label">Glasgow</label>
+      		<select class="form-control" name="glasgow" id="glasgow">
+      			{% for id, name in glasgow %}
+      				<option value="{{ id }}">{{ name }}</option>
+      			{% endfor %}
+      		</select>
+      	</div>
+
+      </form>
+      </div>
+
+      
+      
+      <div class="modal-footer">
+        <div class="col-md-12 text-center">
+			<div id="status"></div>
+		</div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		$('#myModal').on('shown.bs.modal', function () {
+	    	$('#myInput').focus()
+	      })
+
+		$('#monitorizacion').click(cambios);
+
+		$(".checkbox").change(cambios);
+		$(".form-control").change(cambios);
+
+			
+	})
+
+	function cambios(){
+
+		var form =$(this).closest("form");
+            $.ajax({
+                type: form.attr("method"),
+                url : form.attr("action"),
+                data : form.serialize(),
+
+                success: function(result){
+                	complejidad(result.value);                    
+                } 
+            });
+      }
+
+	function complejidad(status){
+
+        var html ='Sin evaluar';
+        if(status == 0){
+          html ='<h2><span class="label label-info">Sin evaluar</span></h2>';
+      	}      
+        else if(status == 1){
+           html='<h2><span class="label label-success">Complejidad baja</span></h2>';
+        }
+        else if(status == 2){
+           html='<h2><span class="label label-warning">Complejidad Mediana</span></h2>';
+        }
+        else if(status == 3){
+           html='<h2><span class="label label-danger">Complejidad Alta</span></h2>';
+       	}
+      
+        $('#status').html(html);
+
+      }
+
+</script>
+
+
+{% endblock %}
