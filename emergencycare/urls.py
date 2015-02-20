@@ -6,31 +6,37 @@ from django.conf.urls.static import static
 admin.autodiscover()
 
 urlpatterns = patterns('',
+
     url(r'^$','ficha.views.index'),
-    url(r'^login/$', 'ficha.views.user_login', name ='login'),
- #   url(r'^login/$','ficha.views.ingresar'),
-    url(r'^logout/$','ficha.views.cerrar', name ='logout'),
-    
-    url(r'^home/$','ficha.views.ficha_redirect', name ='home'),
-    url(r'^ficha/ingresar$','ficha.views.ficha_ingresar', name='ingresar'),
+    url(r'^home/$','ficha.views.enlista', name ='home'),
 
-
-
-    url(r'^ficha/ver/(?P<folio>\d+)$','ficha.views.ficha_ver', name='ver'),
-    url(r'^ficha/modificar/(?P<folio>\d+)$','ficha.views.ficha_modificar', name='modificar'),
-
-    url(r'^ficha/evaluador/(?P<ficha>\d+)$','ficha.views.complejidad', name ='evaluador'),
+    url(r'^login/$', 'sesion.views.user_login', name ='login'),
+    url(r'^logout/$','sesion.views.cerrar' , name ='logout'),
     
 
-    url(r'^listado/$','ficha.views.ficha_redirect', name='listado_fichas'),
-    url(r'^listado/(?P<page>\d+)$','ficha.views.ficha_listado', name='listado'),
+   url(r'^listado/$','ficha.views.enlista', name='enlista'),
 
-    url(r'^archivados/$','ficha.views.ficha_archivados_redirect', name='fichas_archivadas'),
-    url(r'^archivados/(?P<page>\d+)$','ficha.views.ficha_archivados', name='archivados'),
+#Fichas
+    url(r'^derivacion/ingresar$','ficha.views.ficha_ingresar', name='ingresar_ficha'),
+    url(r'^derivacion/ver/(?P<folio>\d+)$','ficha.views.ficha_ver', name='ver_ficha'),
+    url(r'^derivacion/editar/(?P<folio>\d+)$','ficha.views.ficha_editar', name='editar_ficha'),
+
+    url(r'^derivacion/traslado/(?P<folio>\d+)$','ficha.views.traslado_agregar', name='traslado_agregar'),
+
+   url(r'^evaluar/$','diagnostico.views.evaluador', name='evaluador'),
+   url(r'^diagnostico/$','diagnostico.views.diagnostico', name='diagnostico'),
+
+#    url(r'^ficha/evaluador/(?P<ficha>\d+)$','ficha.views.complejidad', name ='evaluador'),
+    
+
+#    url(r'^listado/(?P<page>\d+)$','ficha.views.ficha_listado', name='listado'),
+
+#    url(r'^archivados/$','ficha.views.ficha_archivados_redirect', name='fichas_archivadas'),
+#    url(r'^archivados/(?P<page>\d+)$','ficha.views.ficha_archivados', name='archivados'),
   
 
-   	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-	url(r'^admin/', include(admin.site.urls)),
-	
-	url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
-	)+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    
+    url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
+    )+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
