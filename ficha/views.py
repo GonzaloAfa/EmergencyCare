@@ -113,7 +113,7 @@ def ficha_ingresar(request):
 					traslado 		= traslado
 					)
 
-			return HttpResponseRedirect(reverse('list_servicios'))
+			return HttpResponseRedirect(reverse('enlista'))
 
 		else:
 			data = {
