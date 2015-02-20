@@ -11,10 +11,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-RUTA_PROYECTO   = os.path.dirname(os.path.realpath(__file__))
-SITE_ROOT       = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR        = os.path.dirname(os.path.dirname(__file__))
-LANGUAGE_CODE   = 'es-cl'
+BASE_DIR    = os.path.dirname(os.path.dirname(__file__))
+SITE_ROOT   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -26,10 +24,8 @@ SECRET_KEY = '*wwias0#u)7s4s2+*uf5bvq^_(lgr9=9sjjid0qbr*2#+=78p#'
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 SITE_ID = 1
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -40,6 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ficha',
+    'diagnostico',
+    'sesion',
     'bootstrapform',
     'bootstrap3_datetime',
     )
@@ -51,6 +49,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#    'administration.login_required_middleware.RequireLoginMiddleware',
+
 )
 
 ROOT_URLCONF = 'emergencycare.urls'
@@ -71,7 +71,9 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-TIME_ZONE   = 'UTC'
+LANGUAGE_CODE = 'es-cl'
+TIME_ZONE = 'America/Santiago'
+
 USE_I18N    = True
 USE_L10N    = True
 USE_TZ      = True
@@ -94,13 +96,34 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.DefaultStorageFinder',
  )
 
+import django.conf.global_settings as DEFAULT_SETTINGS
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',
+    'django.core.context_processors.static'
+)
+
+STATICFILES_DIRS = (
+    os.path.join(SITE_ROOT,'static_root'),
+)
+
+STATIC_ROOT = 'media'
 
 TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT,'templates'),
 )
 
-MEDIA_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__),'media/'))
-MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(SITE_ROOT,'media/')
+MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(SITE_ROOT, 'static_root', 'static')
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL  = '/admin/'
+LOGIN_URL           = '/login/'
+LOGIN_REQUIRED_URLS = ( r'/admin(|/)(.*)$',)
+
+LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    r'/(login|logout)(|/)$',
+)
+
+PATH = '/var/www/emergencycare/'
