@@ -8,18 +8,18 @@ admin.autodiscover()
 urlpatterns = patterns('',
 
     url(r'^$','ficha.views.index'),
-    url(r'^home/$','ficha.views.enlista', name ='home'),
+    url(r'^home/$','ficha.views.ficha_redirect', name ='home'),
 
     url(r'^login/$', 'sesion.views.user_login', name ='login'),
     url(r'^logout/$','sesion.views.cerrar' , name ='logout'),
     
 
-   url(r'^listado/$','ficha.views.enlista', name='enlista'),
+   url(r'^listado/$','ficha.views.ficha_redirect', name='enlista'),
+   url(r'^listado/pag/(?P<page>\d+)$','ficha.views.enlista', name='listado'),
 
 #Fichas
     url(r'^derivacion/ingresar$','ficha.views.ficha_ingresar', name='ingresar_ficha'),
     url(r'^derivacion/ver/(?P<folio>\d+)$','ficha.views.ficha_ver', name='ver_ficha'),
-    url(r'^derivacion/editar/(?P<folio>\d+)$','ficha.views.ficha_editar', name='editar_ficha'),
 
     url(r'^derivacion/traslado/(?P<folio>\d+)$','ficha.views.traslado_agregar', name='traslado_agregar'),
 
