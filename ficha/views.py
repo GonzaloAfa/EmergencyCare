@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -19,6 +20,8 @@ from django.core.context_processors import csrf
 from ficha.forms import *
 from ficha.models import *
 
+from diagnostico.models import CHOICES_OXIGENOTERAPIA, CHOICES_ACCESO, CHOICES_HEMODINAMIA, CHOICES_VENTILATORIO, CHOICES_GLASGOW
+
 
 def index(request):
 	return HttpResponseRedirect(reverse('login'))
@@ -36,10 +39,15 @@ def ficha_ingresar(request):
 	errors = {}
 
 	data = {
-		'causa' 	: CHOICES_CAUSA,
-		'movil'		: CHOICES_MOVIL,
-		'solicitud'	: CHOICE_SOLICITUD,
-		'errors' 	: ''
+		'causa' 			: CHOICES_CAUSA,
+		'movil'				: CHOICES_MOVIL,
+		'solicitud'			: CHOICE_SOLICITUD,
+		'errors' 			: '',
+		'oxigenoterapia' 	: CHOICES_OXIGENOTERAPIA,
+		'acceso'			: CHOICES_ACCESO,
+		'hemodinamia'		: CHOICES_HEMODINAMIA,
+		'ventilatorio'		: CHOICES_VENTILATORIO,
+		'glasgow'			: CHOICES_GLASGOW,		
 	}
 
 	if request.POST:
@@ -90,7 +98,8 @@ def ficha_ingresar(request):
 			ficha.save()
 
 			traslado = Traslado.objects.create(
-					movil = Movil.objects.filter(apodo="default")[0]
+					movil = Movil.objects.filter(apodo="default")[0],
+					estado_traslado = SALIRBASE,
 					)
 			traslado.save()
 
@@ -132,12 +141,10 @@ def ficha_ingresar(request):
 
 
 @login_required(login_url='/')
-def enlista(request):
-	listado = Servicio.objects.all()
-	return render_to_response('derivaciones_enlista.html',{'servicios':listado}, context_instance=RequestContext(request))
+def enlista(request, page):
+	listado = Servicio.objects.all().order_by('-id')
 
-"""
-	paginator = Paginator(listado, 10)
+	paginator = Paginator(listado, 3)
 
 	try:
 		pages = int(page)
@@ -150,7 +157,17 @@ def enlista(request):
 	except (InvalidPage):
 		lista = paginator.page(paginator.num_pages)
 
-"""
+
+	data = {
+		'servicios' : lista,
+		'ENLISTADO'	: ENLISTADO,
+		'ENCURSO' 	: ENCURSO,
+		'FINALIZADO': FINALIZADO,
+		'ANULADO' 	: ANULADO,
+		}
+
+	return render_to_response('derivaciones_enlista.html',data, context_instance=RequestContext(request))
+
 
 
 
@@ -158,7 +175,7 @@ def enlista(request):
 
 @login_required(login_url='/')
 def ficha_redirect(request):
-    return HttpResponseRedirect(reverse('listado', args=(1,)))
+    return HttpResponseRedirect(reverse('listado', kwargs={'page' : 1} ))
 
 
 @login_required(login_url='/')
@@ -173,67 +190,6 @@ def ficha_ver(request, folio):
 	 context_instance=RequestContext(request))
 
 
-@login_required(login_url='/')
-def ficha_editar(request, folio):
-
-	# Nos aseguramos que de sea un numero 
-	try:
-		id = int(folio)
-	except:
-		return HttpResponseRedirect(reverse('home'))
-	p = get_object_or_404(Ficha, id=folio)
-
-	# Nos aseguramos que no puedan editar una ficha que ya este archivada
-	if p.estado_ficha == ANULADO or p.estado_ficha == FINALIZADO:
-		return HttpResponseRedirect(reverse('home'))
-
-
-	if request.method == 'POST':
-		form = EditarFichaForm(request.POST)
-
-		if form.is_valid():
-
-			p.nombre			= form.cleaned_data['nombre']
-			p.apellido			= form.cleaned_data['apellido']
-			p.rut 				= form.cleaned_data['rut']
-			p.edad				= form.cleaned_data['edad']
-			p.causa				= form.cleaned_data['causa']
-			p.diagnostico		= form.cleaned_data['diagnostico']
-			p.observacion		= form.cleaned_data['observacion']
-
-
-			p.responsable 		= form.cleaned_data['responsable']
-			p.telefono			= form.cleaned_data['telefono']
-			p.origen			= form.cleaned_data['origen']
-			p.medico_derivador 	= form.cleaned_data['medico_derivador']
-			p.destino			= form.cleaned_data['destino']
-			p.medico_receptor	= form.cleaned_data['medico_receptor']
-			
-
-			p.save()
-			return HttpResponseRedirect(reverse('home'))
-
-	if request.method == 'GET':
-		form = EditarFichaForm(initial={
-			'nombre' 			: p.nombre,
-			'apellido'			: p.apellido,
-			'rut'				: p.rut,
-			'edad'				: p.edad,
-			'diagnostico'		: p.diagnostico,
-			'observacion'		: p.observacion,
-
-
-			'responsable'		: p.responsable,
-			'telefono'			: p.telefono,
-			'origen'			: p.origen,
-			'medico_derivador' 	: p.medico_derivador,
-			'destino'			: p.destino,
-			'medico_receptor' 	: p.medico_receptor,
-
-			})
-
-	return render_to_response('ingresar.html',{'form':form}, context_instance=RequestContext(request))
-
 
 def traslado_agregar(request, folio):
 
@@ -245,108 +201,79 @@ def traslado_agregar(request, folio):
 	movil 		= Movil.objects.all()
 	servicio 	= get_object_or_404(Servicio, id=folio)
 	p 			= servicio.traslado
+	error 		= ''
+	status 		= { 
+				'SALIRBASE' 	: SALIRBASE,
+				'CONTACTO' 		: CONTACTO,
+				'INICIOTRASLADO': INICIOTRASLADO,
+				'FINTRASLADO' 	: FINTRASLADO,
+				'ENTREGA' 		: ENTREGA,
+				'ENLISTADO' 	: ENLISTADO,
+				'ENCURSO'		: ENCURSO,
+
+				}
 
 
 	if request.method == 'POST':
-		form = EditarTraslado(request.POST)
 
-		if form.is_valid():
+
+		if servicio.estado_ficha == str(ENLISTADO):
+
+			if p.estado_traslado == SALIRBASE:
+
+				movil 				= get_object_or_404(Movil,pk= request.POST.get("movil"))
+				km_inicio			= request.POST.get("km_inicio")
+
+				if km_inicio is not None:
+					p.movil				= movil
+					p.km_inicio			= request.POST.get("km_inicio")
+					p.estado_traslado 	= CONTACTO
+
+					servicio.estado_ficha = ENCURSO
+					servicio.save()
+				else:
+
+					error 			= "Ingrese una fecha válida"
+					return render_to_response('traslado.html', 
+						{'movil': movil, 'status' : status, 'servicio':servicio, 'error' : error }, 
+						context_instance=RequestContext(request))
+
+
+			elif p.estado_traslado == CONTACTO:
+
+				p.contacto_paciente	= request.POST.get("contacto_paciente")
+				p.estado_traslado 	= INICIOTRASLADO
+
+	
+			elif p.estado_traslado == INICIOTRASLADO:
+
+				p.inicio_traslado	= request.POST.get("inicio_traslado")
+				p.estado_traslado 	= FINTRASLADO
+
+
+			elif p.estado_traslado == FINTRASLADO:
+
+				p.fin_traslado		= request.POST.get("fin_traslado")
+				p.km_termino 		= request.POST.get("km_termino")
+				p.estado_traslado 	= ENTREGA
+
+			elif p.estado_traslado == ENTREGA:
+				p.entrega_paciente	= request.POST.get("entrega_paciente")
+				servicio.estado_ficha = FINALIZADO
+				servicio.save()
+
+
 
 			# Falta agregar una capa de seguridad!! para que no tengamos problemas del estilo...
 			# inicio espera > termino espera.
-			p.movil				= request.POST.get("movil")
-			p.km_inicio			= request.POST.get("km_inicio")
-			p.km_termino		= request.POST.get("km_termino")
-			p.inicio			= request.POST.get("inicio")
-			p.llegada			= request.POST.get("llegada")
-			p.inicio_espera		= request.POST.get("inicio_espera")
-			p.termino_espera	= request.POST.get("termino_espera")
 
 			p.save()
 			return HttpResponseRedirect(reverse('home'))	
-	else:
-
-		form = EditarTraslado(initial = {
-				'movil' 	: p.movil,
-				'km_inicio'	: p.km_inicio,
-				'km_termino': p.km_termino,
-				'inicio'	: p.inicio,
-				'llegada'	: p.llegada,
-				'inicio_espera': p.inicio_espera,
-				'termino_espera': p.termino_espera,
-
-			})
-
-
-
-	return render_to_response('traslado.html', {'form':form, 'movil': movil }, context_instance=RequestContext(request))
-
-"""
-
-@login_required(login_url='/')
-def ficha_archivados_redirect(request):
-    return HttpResponseRedirect(reverse('archivados', args=(1,)))
-
-
-@login_required(login_url='/')
-def ficha_archivados(request, page):
-	listado = Ficha.objects.filter( estado_ficha = ARCHIVO ).order_by('date_start').reverse()
-	paginator = Paginator(listado, 10)
-
-	try:
-		pages = int(page)
-	except:
-		pages = 1
-
-	try:
-		lista = paginator.page(pages)
-	except (InvalidPage):
-		lista = paginator.page(paginator.num_pages)
-
-
-	return render_to_response('lista_archivados.html',{'list':lista}, context_instance=RequestContext(request))
-
-
-
-
-			p.hora_programada	= form.cleaned_data['hora_programada']
-			p.km_inicio			= form.cleaned_data['km_inicio']
-			p.km_termino		= form.cleaned_data['km_termino']
-			p.hora_inicio_Espera 		= form.cleaned_data['hora_inicio_Espera']
-			p.hora_llegada_Espera		= form.cleaned_data['hora_llegada_Espera']
-			p.hora_QTH_inicio 	= form.cleaned_data['hora_QTH_inicio']
-			p.hora_QTH_final	= form.cleaned_data['hora_QTH_final']
-
-
-			'km_inicio'			: p.km_inicio,
-			'km_termino'		: p.km_termino,
-			'hora_inicio_Espera': p.hora_inicio_Espera,
-			'hora_llegada_Espera': p.hora_llegada_Espera,
-
-			'hora_QTH_inicio'	: p.hora_QTH_inicio,
-			'hora_QTH_final'	: p.hora_QTH_final,
-
-def complejidad(request, ficha):
-
-	ficha_objects = get_object_or_404(Ficha, id=ficha)
-
-	if ficha_objects is not None:
-		
-		if request.POST:
-			form = RequerimientosForm(request.POST, initial={'ficha' : ficha })
-			if form.is_valid():
-				form.save()
-				return HttpResponseRedirect(reverse('home'))
 		else:
-			form = RequerimientosForm(initial={
-				'ficha' : ficha 
-				})
+			error = "Estás tratando de agregar informacion de traslado a un servicio que fue anulado o ya finalizó"
 
-		return render_to_response('complejidad.html',{'form': form, 'ficha': ficha_objects }, 
-			context_instance=RequestContext(request))
-	
+
 	else:
-		return HttpResponseRedirect(reverse('home'))
+		error = "Existe un problema"
 
-
-"""
+	return render_to_response('traslado.html', {'movil': movil, 'status' : status, 'servicio':servicio, 'error' : error }, context_instance=RequestContext(request))

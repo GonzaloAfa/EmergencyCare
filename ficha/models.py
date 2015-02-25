@@ -3,10 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 
 
 
-ENLISTADO  	= 'En lista'
-ENCURSO 	= 'En Curso'
-FINALIZADO 	= 'Finalizado'
-ANULADO 	= 'Anulado'
+ENLISTADO  	= '1'
+ENCURSO 	= '2'
+FINALIZADO 	= '3'
+ANULADO 	= '4'
 
 
 CHOICE_SOLICITUD=(
@@ -24,18 +24,32 @@ CHOICES_CAUSA = (
 
 
 CHOICES_STATUS = (
-    ('1' , ENLISTADO),
-    ('2' , ENCURSO),
-    ('3' , FINALIZADO),
-    ('4' , ANULADO),
+    (ENLISTADO	, 'En lista'),
+    (ENCURSO 	, 'En Curso'),
+    (FINALIZADO , 'Finalizado'),
+    (ANULADO 	, 'Anulado'),
 )
 
 CHOICES_MOVIL = (
-	('Normal', 'Basico'),
-	('Medio' , 'Mediana Complejidad'),
-	('Alto'  , 'Alta Complejidad'),
+	('Normal', 'Complejidad Baja'),
+	('Medio' , 'Complejidad Mediana '),
+	('Alto'  , 'Complejidad Alta '),
 )
 
+
+SALIRBASE		= '1'
+CONTACTO 		= '2'
+INICIOTRASLADO 	= '3'
+FINTRASLADO		= '4'
+ENTREGA 		= '5'
+
+CHOICES_TRASLADO = (
+	(SALIRBASE 		,'Salir de la base'),
+	(CONTACTO 		,'Contacto con paciente'),
+	(INICIOTRASLADO ,'Inicio Traslado'),
+	(FINTRASLADO 	,'Finaliza Traslado'),
+	(ENTREGA 		,'Entrega del paciente'),
+	)
 
 
 class Movil(models.Model):
@@ -78,18 +92,18 @@ class Ficha (models.Model):
 class Traslado(models.Model):
 
 	movil 				= models.ForeignKey(Movil)
+	estado_traslado		= models.CharField(max_length=20,choices=CHOICES_TRASLADO)
 
 	#Datos internos que despues se modifican
 	km_inicio			= models.PositiveIntegerField(blank=True, null=True)
 	km_termino			= models.PositiveIntegerField(blank=True, null=True)
 
-	inicio				= models.DateTimeField(max_length=10, blank=True, null=True)
-	llegada				= models.DateTimeField(max_length=10, blank=True, null=True)
+	contacto_paciente	= models.DateTimeField(max_length=10, blank=True, null=True)
+	inicio_traslado		= models.DateTimeField(max_length=10, blank=True, null=True)
 	
-	inicio_espera 		= models.DateTimeField(max_length=10, blank=True, null=True)
-	termino_espera		= models.DateTimeField(max_length=10, blank=True, null=True)
+	fin_traslado 		= models.DateTimeField(max_length=10, blank=True, null=True)
+	entrega_paciente	= models.DateTimeField(max_length=10, blank=True, null=True)
 
-	tiempo_espera	 	= models.PositiveIntegerField(blank=True, null=True)
 
 	def __unicode__(self):
 		return self.id_ficha
@@ -107,3 +121,6 @@ class Servicio(models.Model):
 
 	ficha 				= models.ForeignKey(Ficha)
 	traslado  			= models.ForeignKey(Traslado)
+
+	def __unicode__(self):
+		return self.estado_ficha+ " - "+self.ficha.nombre + " " + self.ficha.apellido
