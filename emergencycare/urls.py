@@ -25,10 +25,11 @@ urlpatterns = patterns('',
 
    url(r'^evaluar/$','diagnostico.views.evaluador', name='evaluador'),
    url(r'^diagnostico/$','diagnostico.views.diagnostico', name='diagnostico'),
+   url(r'^exportar/$','ficha.export.create_xls', name='exportar'),
 
-#    url(r'^ficha/evaluador/(?P<ficha>\d+)$','ficha.views.complejidad', name ='evaluador'),
-    
 
+
+#    url(r'^ficha/evaluador/(?P<ficha>\d+)$','ficha.views.complejidad', name ='evaluador'),    
 #    url(r'^listado/(?P<page>\d+)$','ficha.views.ficha_listado', name='listado'),
 
 #    url(r'^archivados/$','ficha.views.ficha_archivados_redirect', name='fichas_archivadas'),
