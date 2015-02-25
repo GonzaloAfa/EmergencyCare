@@ -31,12 +31,11 @@ def home(request):
 	return render_to_response('base.html', context_instance=RequestContext(request))
 
 
-
 @login_required(login_url='/')
 def ficha_ingresar(request):
 
-	valid = True
-	errors = {}
+	valid 	= True
+	errors 	= {}
 
 	data = {
 		'causa' 			: CHOICES_CAUSA,
