@@ -8,109 +8,8 @@
 {% endblock%}
 
 {% block container %}
-
-
-<!-- Modal -->
-<div class="modal fade" id="evaluar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Evaluar tipo de movil</h4>
-      </div>
-
-      <div class="modal-body">          
-
-      <form role="form" method="POST" action="{% url 'diagnostico' %}">
-        {% csrf_token %}
-
-        <div class="form-group evaluar-checkbox">
-            <div class="checkbox">
-                <label class="col-md-6">
-                    <input type="checkbox" id="monitorizacion" name="monitorizacion">
-                        Monitorización
-                </label>
-                <label class="col-md-6">
-                    <input type="checkbox" id="ventilacion_mecanica" name="ventilacion_mecanica">
-                        Ventilación Mecánicas
-                </label>
-            </div>
-            <div class="checkbox">
-                <label class="col-md-6">
-                    <input type="checkbox" id="inmovilizacion" name="inmovilizacion">
-                        Inmovilización
-                </label>
-                <label class="col-md-6">
-                    <input type="checkbox" id="marcapaso" name="marcapaso">
-                        Marcapaso
-                </label>
-            </div>
-        </div>
-
-
-        <div class="form-group" >
-            <label class="control-label">Oxigenoterapia</label>
-            <select class="form-control" name="oxigenoterapia" id="oxigenoterapia">
-                {% for id, name in oxigenoterapia %}
-                    <option value="{{ id }}">{{ name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-
-        <div class="form-group" >
-            <label class="control-label">Acceso</label>
-            <select class="form-control" name="acceso_vascular" id="acceso_vascular"> 
-                {% for id, name in acceso %}
-                    <option value="{{ id }}">{{ name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group" >
-            <label class="control-label">Hemodinamia</label>
-            <select class="form-control" name="hemodinamia" id="hemodinamia">
-                {% for id, name in hemodinamia %}
-                    <option value="{{ id }}">{{ name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group" >
-            <label class="control-label">Ventilatorio</label>
-            <select class="form-control" name="ventilatorio" id="ventilatorio">
-                {% for id, name in ventilatorio %}
-                    <option value="{{ id }}">{{ name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group" >
-            <label class="control-label">Glasgow</label>
-            <select class="form-control" name="glasgow" id="glasgow">
-                {% for id, name in glasgow %}
-                    <option value="{{ id }}">{{ name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-      </form>
-      </div>     
-      <div class="modal-footer">
-        <div class="text-center">
-            <div id="status"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
 <div class="container">
+
 	<div class="col-md-12">
 		<div class="stepwizard">
             <div class="stepwizard-row setup-panel">
@@ -133,7 +32,7 @@
 
 	<div class="col-md-12">
 
-		<form id='ficha_ingresar' method='POST' action='{% url "ingresar_ficha" %}' class="form-horizontal" role="form">
+		<form id='ficha_ingresar' method='POST' action='{% url "ingresar" %}' class="form-horizontal" role="form">
 			<div class="col-md-offset-3 col-md-6">
 				
 				{% csrf_token %}
@@ -213,6 +112,16 @@
                             {% endif %}
                         </div>
 
+				 		 <div class="form-group" >
+                            <label class="control-label">Tipo de móvil</label>
+                            <select class="form-control" name="tipo_movil">
+                                 {% for id, name in movil %}
+                                 <option value="{{ id }}">{{ name }}</option>
+                                 {% endfor %}
+
+                            </select>
+                        </div>
+
 				 		
 				 		 <div class="form-group">
                             <label class="control-label">Responsable del traslado</label>
@@ -250,24 +159,7 @@
                             <input maxlength="60" type="text" required="required" class="form-control" placeholder="medico_receptor" 
                             name="medico_receptor" />
                         </div>
-                        
-                        <div class="form-group" >
-                            <label class="control-label">Tipo de móvil</label>
-                            <div class='input-group date' id='diagnostico'>
-                                <select class="form-control" name="tipo_movil">
-                                     {% for id, name in movil %}
-                                     <option value="{{ id }}">{{ name }}</option>
-                                     {% endfor %}
-                                </select>
-                                <span class="input-group-addon" data-toggle="modal" data-target="#evaluar">
-                                    <span class="fa fa-stethoscope"></span>
-                                </span>
-                            </div>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#evaluar">
-                                    Evaluar móvil
-                                </button>
 
-                        </div>
                         <button class="btn btn-success nextBtn btn-lg pull-right" type="button" >Siguiente</button>
 
 
@@ -315,8 +207,6 @@
 	</div>
 </div>
 
-
-
 <script>
 
 $(function() {
@@ -326,23 +216,10 @@ $(function() {
 		"language": "es-cl", 
 		"format": "YYYY-MM-DD HH:mm"
 	});
-
 });
 
 
-
 $(document).ready(function () {
-
-    $('#evaluador').on('shown.bs.modal', function () {
-        $('#myInput').focus()
-    })
-
-    $('#monitorizacion').click(cambios);
-
-    $(".checkbox").change(cambios);
-    $(".form-control").change(cambios);
-
-
 
     var navListItems = $('div.setup-panel div a'),
             allWells = $('.setup-content'),
@@ -395,49 +272,6 @@ $("#final_button").on("click",function(event){
 	$(this).closest("form").submit();
 });
 
-
-    function cambios(){
-
-        var form =$(this).closest("form");
-            $.ajax({
-                type: form.attr("method"),
-                url : form.attr("action"),
-                data : form.serialize(),
-
-                success: function(result){
-                    complejidad(result.value);                    
-                } 
-            });
-      }
-
-    function complejidad(status){
-
-        var html ='<h2><span class="label label-info">Sin evaluar</span></h2>';
-        if(status == 0){
-          html ='<h2><span class="label label-info">Sin evaluar</span></h2>';
-           $("#diagnostico select").val("Normal");
-        }      
-        else if(status == 1){
-           html='<h2><span class="label label-success">Complejidad baja</span></h2>';
-           $("#diagnostico select").val("Normal");
-        }
-        else if(status == 2){
-           html='<h2><span class="label label-warning">Complejidad Mediana</span></h2>';
-           $("#diagnostico select").val("Medio");
-
-        }
-        else if(status == 3){
-           html='<h2><span class="label label-danger">Complejidad Alta</span></h2>';
-           $("#diagnostico select").val("Alto");
-
-        }
-        else{
-           $("#diagnostico select").val("Normal");            
-        }
-      
-        $('#status').html(html);
-
-      }
 
 </script>
 {% endblock %}

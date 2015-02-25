@@ -8,14 +8,14 @@
 {% block container %}
 
 
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#evaluar">
 	Contacto
 </button>
 
 
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="evaluar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
   <div class="modal-dialog">
     <div class="modal-content">
@@ -124,7 +124,7 @@
 
 	$(document).ready(function () {
 
-		$('#myModal').on('shown.bs.modal', function () {
+		$('#evaluar').on('shown.bs.modal', function () {
 	    	$('#myInput').focus()
 	      })
 

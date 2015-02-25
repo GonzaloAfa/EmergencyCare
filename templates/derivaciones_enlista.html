@@ -8,9 +8,9 @@
 	<table  class="table table-condensed">
   		<thead>
   		<tr>
-  			<th>Móvil</th>
+  			<th>Complejidad</th>
+  			<th>Estado</th>
             <th>Fecha</th>
-            <th>Paciente</th>
             <th>Origen</th>
             <th>Destino</th>
             <th class="text-right">Opciones</th>
@@ -21,19 +21,29 @@
 		{% for element in servicios %}
 		<tr>
 			<td>
-
 			{% if element.ficha.tipo_movil == 'Normal' %}
-				<span class="label label-success">Basica Complejidad</span>
+				<span class="label label-success">Basico</span>
 			{% elif element.ficha.tipo_movil == 'Medio' %}
-				<span class="label label-warning">Media Complejidad</span>
+				<span class="label label-warning">Medio</span>
 			{% elif element.ficha.tipo_movil == 'Alto' %}
-				<span class="label label-warning">Alta Complejidad</span>
+				<span class="label label-warning">Alto</span>
 			{% endif %}
 
 			</td>
 
+			<td>
+			{% if element.estado_ficha == ENLISTADO %}
+				<span class="label label-info">Por hacer</span>
+			{% elif element.estado_ficha == ENCURSO %}
+				<span class="label label-info">En Curso</span>
+			{% elif element.estado_ficha == FINALIZADO %}
+				<span class="label label-info">Finalizado</span>
+			{% endif %}
+
+			</td>
+
+
 			<td>{{element.date_start 	| date:'SHORT_DATETIME_FORMAT'}}</td>
-			<td>{{element.ficha.nombre 	| capfirst}} {{element.ficha.apellido | capfirst}}</td>
 			<td>{{element.ficha.origen 	| capfirst}}</td>
 			<td>{{element.ficha.destino | capfirst}}</td>
 
@@ -54,23 +64,22 @@
   	</table>	
 
 
-{% comment %}
-{%if list %}
+
+{%if servicios %}
 	<ul class="pagination">
-	  {%if list.has_previous %}
-		  <li><a href="{% url 'listado' list.previous_page_number %}">&laquo;</a></li>
+	  {%if servicios.has_previous %}
+		  <li><a href="{% url 'listado' servicios.previous_page_number %}">&laquo;</a></li>
 	  {% else %}
 		  <li><a href="{% url 'listado' 1 %}">&laquo;</a></li>
 	  {% endif %}
 
-	  {%if list.has_next %}
-		  <li><a href="{% url 'listado' list.next_page_number %}">&raquo;</a></li>
+	  {%if servicios.has_next %}
+		  <li><a href="{% url 'listado' servicios.next_page_number %}">&raquo;</a></li>
 	  {% endif %}	  
 	</ul>
 
-	<h4>Página {{list.number}} de {{list.paginator.num_pages}}</h4>
+	<h4>Página {{servicios.number}} de {{servicios.paginator.num_pages}}</h4>
 {% endif%}
-{% endcomment %}
 
 
 

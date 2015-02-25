@@ -7,10 +7,8 @@
   
   <div class="col-md-12">
     <div class="col-md-6">
-      <h3>Fecha de ingreso: {{ficha.date_start}} </h3>
-    </div>
-    <div class="col-md-6">
-      <h3>Tipo de Movil:  
+      <h4>Fecha de ingreso: {{servicio.date_start}} </h4>
+      <h4>Tipo de Movil:  
         {% if servicio.ficha.tipo_movil == 'Normal' %}
           <span class="label label-success">Baja Complejidad</span>
         {% elif servicio.ficha.tipo_movil == 'Medio' %}
@@ -18,9 +16,17 @@
         {% elif servicio.ficha.tipo_movil == 'Alto' %}
           <span class="label label-danger">Alta Complejidad</span>
         {% endif %}
+      </h4>
+      <h4> Estado: 
+        {% if servicio.estado_ficha == "1" %}
+          En lista
+        {% elif servicio.estado_ficha == "2" %}
+          En curso
+        {% elif servicio.estado_ficha == "3" %}
+          Finalizado
+        {% endif %}
 
-
-      </h3>
+      </h4>
     </div>
   </div>
   
@@ -96,43 +102,35 @@
               {% endif %}
             </dd>
 
-          	<dt>Hora inicio del servicio</dt>
+          	<dt>Paciente contactado</dt>
           	<dd>
-              {% if servicio.traslado.inicio %}
-                {{servicio.traslado.inicio}}
+              {% if servicio.traslado.contacto_paciente %}
+                {{servicio.traslado.contacto_paciente}}
               {% endif %}
               </dd>
 
 
-          	<dt>Hora termino del servicio</dt>
+          	<dt>Inicio traslado</dt>
           	<dd>
-              {% if servicio.traslado.llegada %}
-              {{servicio.traslado.llegada}}
+              {% if servicio.traslado.inicio_traslado %}
+              {{servicio.traslado.inicio_traslado}}
               {% endif %}
             </dd>
 
 
-          	<dt>Hora inicio espera</dt>
+          	<dt>Fin traslado</dt>
           	<dd>
-              {% if servicio.traslado.inicio_espera %}
-                {{servicio.traslado.inicio_espera}}
+              {% if servicio.traslado.fin_traslado %}
+                {{servicio.traslado.fin_traslado}}
               {% endif %}
             </dd>
 
-          	<dt>Hora termino espera</dt>
+          	<dt>Paciente entregado</dt>
           	<dd>
-              {% if servicio.traslado.termino_espera%}
-                {{servicio.traslado.termino_espera}}
+              {% if servicio.traslado.entrega_paciente%}
+                {{servicio.traslado.entrega_paciente}}
               {% endif %}
             </dd>
-
-            <dt>Total Tiempo espera</dt>
-            <dd>
-              {% if servicio.traslado.tiempo_espera %}
-                {{servicio.traslado.tiempo_espera}}
-              {% endif %}
-            </dd>
-
 
           </dl>
 

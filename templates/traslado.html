@@ -5,20 +5,21 @@
 <div class="container">
 	<div class="col-md-offset-3 col-md-6">
 	
-
-		<form role="form" method="post" action="">
+		<form role="form" method="POST" action="{% url 'traslado_agregar' servicio.id %}">
 	       {% csrf_token %}
 
+	    {% if servicio.estado_ficha == status.ENLISTADO %}
+		   
+	       {% if servicio.traslado.estado_traslado == status.SALIRBASE %}
 	       <div class="form-group" >
-	       		<label class="control-label">Causa</label>
-	       		<select class="form-control" name="causa">
+	       		<label class="control-label">Movil</label>
+	       		<select class="form-control" name="movil">
 	       			{% for e in movil %}
 	       			<option value="{{ e.id }}">{{ e.apodo }}</option>
 	       			{% endfor %}
 	       		</select>
 	       	</div>
 	  	
-
 	  		<div class="form-group">            	
             	<label class="control-label">
             		KM inicial del móvil
@@ -26,63 +27,7 @@
 
             	<input maxlength="60" type="text" class="form-control" placeholder="km_inicio" name="km_inicio" />
             </div>
-	  		<div class="form-group">            	
-            	<label class="control-label">
-            		KM final del móvil
-            	</label>
-
-            	<input maxlength="60" type="text" class="form-control" placeholder="km_termino" name="km_termino" />
-            </div>
-	  		<div class="form-group">            	
-            	<label class="control-label">
-            		Hora de inicio
-            	</label>
-            	<div class='input-group date' id='datetimepicker1'>
-	            	<input maxlength="60" type="text" class="form-control" placeholder="inicio" name="inicio" />
-	            	<span class="input-group-addon">
-	            		<span class="glyphicon glyphicon-calendar">
-	            		</span>
-	            	</span>
-	            </div>
-            </div>
-	  		<div class="form-group">            	
-            	<label class="control-label">
-            		Hora de llegada
-            	</label>
-            	<div class='input-group date' id='datetimepicker2'>
-            		<input maxlength="60" type="text" class="form-control" placeholder="llegada" name="llegada" />
-
-            		<span class="input-group-addon">
-	            		<span class="glyphicon glyphicon-calendar">
-	            		</span>
-	            	</span>
-	            </div>
-            </div>
-	  		<div class="form-group">            	
-            	<label class="control-label">
-            		Inicio tiempo de espera
-            	</label>
-            	<div class='input-group date' id='datetimepicker3'>
-	            	<input maxlength="60" type="text" class="form-control" placeholder="inicio_espera" name="inicio_espera" />
-	            	<span class="input-group-addon">
-	            		<span class="glyphicon glyphicon-calendar">
-	            		</span>
-	            	</span>
-	            </div>
-            </div>
-	  		<div class="form-group">            	
-            	<label class="control-label">
-            		Termino tiempo de espera
-            	</label>
-            	<div class='input-group date' id='datetimepicker4'>
-	            	<input maxlength="60" type="text" class="form-control" placeholder="termino_espera" name="termino_espera" />
-	            	<span class="input-group-addon">
-		            		<span class="glyphicon glyphicon-calendar">
-		            		</span>
-		            	</span>
-		            </div>
-
-            </div>
+            {% endif %}
 
             <div class="form-group">
 		   		<div class="col-md-offset-3 col-md-6">
@@ -91,6 +36,102 @@
 				</div>
 			</div>
 
+		{% elif servicio.estado_ficha == status.ENCURSO %}
+
+	       {% if servicio.traslado.estado_traslado == status.CONTACTO %}
+	  		<div class="form-group">            	
+            	<label class="control-label">
+            		Hora de contacto con el paciente
+            	</label>
+            	<div class='input-group date' id='datetimepicker1'>
+	            	<input maxlength="60" type="text" class="form-control" placeholder="contacto_paciente" name="contacto_paciente" />
+	            	<span class="input-group-addon">
+	            		<span class="glyphicon glyphicon-calendar">
+	            		</span>
+	            	</span>
+	            </div>
+            </div>
+
+
+
+	       	{% elif servicio.traslado.estado_traslado == status.INICIOTRASLADO %}
+			<div class="form-group">            	
+            	<label class="control-label">
+            		inicio_traslado            	
+            	</label>
+            	<div class='input-group date' id='datetimepicker2'>
+            		<input maxlength="60" type="text" class="form-control" placeholder="inicio_traslado" name="inicio_traslado" />
+
+            		<span class="input-group-addon">
+	            		<span class="glyphicon glyphicon-calendar">
+	            		</span>
+	            	</span>
+	            </div>
+            </div>
+
+
+
+
+	       	{% elif servicio.traslado.estado_traslado == status.FINTRASLADO %}
+	  		<div class="form-group">            	
+            	<label class="control-label">
+            		fin_traslado
+            	</label>
+            	<div class='input-group date' id='datetimepicker3'>
+	            	<input maxlength="60" type="text" class="form-control" placeholder="fin_traslado" name="fin_traslado" />
+	            	<span class="input-group-addon">
+	            		<span class="glyphicon glyphicon-calendar">
+	            		</span>
+	            	</span>
+	            </div>
+            </div>	       	
+	       	<div class="form-group">            	
+            	<label class="control-label">
+            		KM final del móvil
+            	</label>
+
+            	<input maxlength="60" type="text" class="form-control" placeholder="km_termino" name="km_termino" />
+            </div>
+
+
+
+
+	       	{% elif servicio.traslado.estado_traslado == status.ENTREGA %}
+	  		<div class="form-group">            	
+            	<label class="control-label">
+            		entrega_paciente
+            	</label>
+            	<div class='input-group date' id='datetimepicker4'>
+	            	<input maxlength="60" type="text" class="form-control" placeholder="entrega_paciente" name="entrega_paciente" />
+	            	<span class="input-group-addon">
+		            		<span class="glyphicon glyphicon-calendar">
+		            		</span>
+		            	</span>
+		            </div>
+            </div>
+            {% endif %}
+
+
+
+	  	
+
+
+            <div class="form-group">
+		   		<div class="col-md-offset-3 col-md-6">
+					<button type="reset" class="btn btn-danger">Cancelar</button>
+					<button type="submit" class="btn btn-success">Enviar</button>
+				</div>
+			</div>
+
+
+	  	{% else %}
+		  	<div class="text-center">
+			  	<h2>Acción no permitida</h2>
+			  	<hr>
+			  	<p>Estás tratando de agregar información de traslado a un servicio que fue anulado o que ya fue realizado con éxito.</p>
+		  	</div>
+	  	
+	  	{% endif %}
 
 	  	</form>
 
